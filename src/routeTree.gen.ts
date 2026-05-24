@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RecruiterRouteImport } from './routes/recruiter'
+import { Route as FeedRouteImport } from './routes/feed'
+import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as IndexRouteImport } from './routes/index'
 
+const RecruiterRoute = RecruiterRouteImport.update({
+  id: '/recruiter',
+  path: '/recruiter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedRoute = FeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyzeRoute = AnalyzeRouteImport.update({
+  id: '/analyze',
+  path: '/analyze',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analyze': typeof AnalyzeRoute
+  '/feed': typeof FeedRoute
+  '/recruiter': typeof RecruiterRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analyze': typeof AnalyzeRoute
+  '/feed': typeof FeedRoute
+  '/recruiter': typeof RecruiterRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analyze': typeof AnalyzeRoute
+  '/feed': typeof FeedRoute
+  '/recruiter': typeof RecruiterRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/analyze' | '/feed' | '/recruiter'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/analyze' | '/feed' | '/recruiter'
+  id: '__root__' | '/' | '/analyze' | '/feed' | '/recruiter'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyzeRoute: typeof AnalyzeRoute
+  FeedRoute: typeof FeedRoute
+  RecruiterRoute: typeof RecruiterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/recruiter': {
+      id: '/recruiter'
+      path: '/recruiter'
+      fullPath: '/recruiter'
+      preLoaderRoute: typeof RecruiterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed': {
+      id: '/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof FeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analyze': {
+      id: '/analyze'
+      path: '/analyze'
+      fullPath: '/analyze'
+      preLoaderRoute: typeof AnalyzeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +104,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyzeRoute: AnalyzeRoute,
+  FeedRoute: FeedRoute,
+  RecruiterRoute: RecruiterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

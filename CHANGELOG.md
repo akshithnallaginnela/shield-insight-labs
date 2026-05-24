@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### v2.0.0 — Human Intelligence Detection (prototype)
+
+- Layered detection pipeline combining rule-based patterns with psychological, behavioral, and linguistic signals.
+- New high-confidence detection for Investment, Tech Support, and Romance frauds.
+- Context-aware boosts for remote-install prompts, payment requests, and authority impersonation.
+- Reduced false positives for educational warnings and safety tips.
+- Changelog, deploy script, and packaging for v2.0.0 release.
+
+
 ## [2.0.0] - 2024-[TODAY]
 
 ### Added

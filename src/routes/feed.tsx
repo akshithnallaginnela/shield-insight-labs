@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { FeedItem } from "@/lib/seedFeed";
 import { FEED, type FeedCategory } from "@/lib/seedFeed";
 import { Search, Radio, AlertTriangle, ShieldAlert, Info } from "lucide-react";
 

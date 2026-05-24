@@ -105,7 +105,7 @@ const DETECTION_PATTERNS: DetectionPattern[] = [
     id: "romance-fraud",
     regex: /\b(i (?:have )?(?:strong )?feelings|i love you|need help|send me money|urgent travel costs|help me with money|cannot access my funds)\b/gi,
     flag: { label: "Romance / Personal Appeal", description: "Emotional appeal asking for money or favors.", severity: "high" },
-    weight: 40,
+    weight: 60,
   },
   {
     id: "credential-request",

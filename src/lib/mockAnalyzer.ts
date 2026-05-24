@@ -334,6 +334,7 @@ function analyzeMessageOriginal(text: string): LegacyAnalysisResult {
   const messageLength = normalized.length;
   const hasEducationCue = EDUCATION_PATTERNS.some((pattern) => pattern.test(trimmed));
   const hasInstallCue = OPERATIONAL_PATTERNS.apkOrInstall.test(trimmed);
+  const hasRemoteInstallCue = OPERATIONAL_PATTERNS.remoteInstall.test(trimmed);
   const hasPaymentCue = OPERATIONAL_PATTERNS.paymentIntent.test(trimmed);
   const hasRedirectCue = OPERATIONAL_PATTERNS.contactRedirect.test(trimmed);
   const hasAuthorityCue = OPERATIONAL_PATTERNS.authorityCue.test(trimmed);
@@ -354,6 +355,7 @@ function analyzeMessageOriginal(text: string): LegacyAnalysisResult {
   if (shortLinkCount > 0) score += 4;
   if (/[!]{2,}/.test(trimmed) || /[A-Z]{6,}/.test(trimmed)) score += 4;
   if (hasInstallCue) score += 14;
+  if (hasRemoteInstallCue) score += 18;
   if (hasPaymentCue && hasCallToAction) score += 10;
   if (hasRedirectCue && (hasSensitiveCue || hasPaymentCue)) score += 12;
   if (hasAuthorityCue && (hasSensitiveCue || hasPaymentCue || linkCount > 0)) score += 10;
@@ -366,6 +368,16 @@ function analyzeMessageOriginal(text: string): LegacyAnalysisResult {
 
   if (strongSignals >= 2) score += 8;
   if (strongSignals >= 3) score += 10;
+
+  // Targeted boosts: tech support scams that request remote install or calls
+  if (redFlagsMap.has("tech-support-scam") && (hasRemoteInstallCue || /\bcall (support|us|now|help)\b/i.test(trimmed))) {
+    score += 40;
+  }
+
+  // Romance scams often combine emotional appeal with payment requests
+  if (redFlagsMap.has("romance-fraud") && hasPaymentCue) {
+    score += 15;
+  }
 
   score = Math.max(0, Math.min(100, score));
   if (!trimmed) score = 0;

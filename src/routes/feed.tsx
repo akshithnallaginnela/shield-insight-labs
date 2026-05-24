@@ -27,12 +27,22 @@ const SEV_STYLE = {
 function FeedPage() {
   const [q, setQ] = useState("");
   const [active, setActive] = useState<FeedCategory | "All">("All");
+  const [userReports, setUserReports] = useState<FeedItem[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("scamshield_reports");
+      if (raw) setUserReports(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  const all = useMemo(() => [...userReports, ...FEED], [userReports]);
 
   const items = useMemo(() => {
-    return FEED.filter((i) => (active === "All" ? true : i.category === active)).filter((i) =>
+    return all.filter((i) => (active === "All" ? true : i.category === active)).filter((i) =>
       q ? (i.title + i.description + i.category).toLowerCase().includes(q.toLowerCase()) : true
     );
-  }, [q, active]);
+  }, [q, active, all]);
 
   return (
     <div className="mx-auto max-w-5xl px-4 pt-10 md:px-6 md:pt-14">

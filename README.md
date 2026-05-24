@@ -4,13 +4,13 @@
 
 AI-powered scam detection for fake recruiters, phishing attacks, suspicious messages, and online fraud — built for the messaging-first generation.
 
-![Version](https://img.shields.io/badge/version-1.0-blue)
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![Status](https://img.shields.io/badge/status-live-success)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ## Overview
 
-ScamShield AI is a comprehensive threat detection platform that analyzes suspicious messages in real-time. With advanced AI patterns, emotional manipulation detection, and community-driven threat feeds, it helps users identify and avoid online scams before they become victims.
+ScamShield AI is a comprehensive threat detection platform that analyzes suspicious messages in real-time. With advanced AI patterns, psychology + behavioral detection, linguistic markers, and scam-type classification, it helps users identify and avoid online scams before they become victims.
 
 - **10,000+** scams analyzed
 - **Real-time** threat detection
@@ -27,8 +27,14 @@ Validate recruiters against suspicious domains and known fake-HR patterns before
 ### 👥 Community Threat Feed
 A live feed of reported scams from real users so you can spot active campaigns instantly.
 
-### 🧠 Emotional Manipulation Detection
-Identifies urgency, fear, and authority tactics scammers use to bypass rational thinking.
+### 🧠 Psychology + Behavioral Detection
+Identifies urgency, fear, authority, and behavioral anomalies scammers use to bypass rational thinking.
+
+### 📝 Linguistic Anomaly Detection
+Flags language patterns, tone shifts, and grammar issues commonly seen in scam templates.
+
+### 🧭 Scam Type Classification
+Classifies messages as romance, investment, tech support, phishing, identity theft, and more.
 
 ### 🌐 Fake Domain Detection
 Flags lookalike domains, suspicious TLDs, and shortened links that hide phishing pages.

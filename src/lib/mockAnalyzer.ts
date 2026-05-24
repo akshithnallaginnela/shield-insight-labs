@@ -220,9 +220,11 @@ const EDUCATION_PATTERNS = [
 
 const OPERATIONAL_PATTERNS = {
   apkOrInstall: /\b(apk|install now|download app|enable unknown sources|sideload|update app)\b/gi,
+  // detect remote access / install cues commonly used in tech support scams
+  remoteInstall: /\b(install remote|install remote support|remote access|grant remote access|allow remote access|install anydesk|install teamviewer|teamviewer|anydesk)\b/gi,
   paymentIntent:
     /\b(pay|transfer|deposit|upi|bank|wallet|gpay|phonepe|paytm|refund|fee|charge)\b/gi,
-  contactRedirect: /\b(contact me on|move to|continue on|dm on|whatsapp|telegram|call on)\b/gi,
+  contactRedirect: /\b(contact me on|move to|continue on|dm on|whatsapp|telegram|call on|call support|call now|call us|call)\b/gi,
   authorityCue:
     /\b(bank|hr|recruiter|support|customer care|courier|delivery|income tax|government|police|amazon|flipkart|microsoft|google|tcs|sbi|hdfc)\b/gi,
   sensitiveRequest:
@@ -230,6 +232,7 @@ const OPERATIONAL_PATTERNS = {
   callToAction:
     /\b(click here|open link|tap here|verify now|respond now|send details|share details|apply now)\b/gi,
 };
+
 
 export function analyzeMessage(message: string): AnalysisResult {
   const trimmed = message.trim();

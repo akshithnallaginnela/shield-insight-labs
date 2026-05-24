@@ -54,6 +54,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "AI-powered scam detection for phishing, fake recruiters, WhatsApp fraud, and manipulative messages." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "ScamShield AI — Verify Before You Trust" },
+      { name: "twitter:description", content: "AI-powered scam detection for phishing, fake recruiters, WhatsApp fraud, and manipulative messages." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/62f207a5-f056-4d5c-88dc-6c8289fa9137" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/62f207a5-f056-4d5c-88dc-6c8289fa9137" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },

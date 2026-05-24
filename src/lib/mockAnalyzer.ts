@@ -247,8 +247,10 @@ export function analyzeMessage(message: string): AnalysisResult {
   // Give stronger weight to the base rule-based result while retaining
   // psychological and behavioral signals so the heuristics drive initial
   // classification during this v2.0 prototype.
+  // For v2.0 prototype emphasize base rule engine more so scam patterns
+  // lead to stronger final scores while retaining psychology signals.
   const combinedScore = Math.min(
-    baseResult.score * 0.6 + psychologyScore * 0.2 + behaviorScore * 0.1 + linguisticScore * 0.1,
+    baseResult.score * 0.85 + psychologyScore * 0.1 + behaviorScore * 0.05,
     100,
   );
 

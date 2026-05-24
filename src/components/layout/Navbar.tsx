@@ -4,8 +4,11 @@ import { ShieldCheck } from "lucide-react";
 const links = [
   { to: "/", label: "Home" },
   { to: "/analyze", label: "Analyzer" },
+  { to: "/link-scanner", label: "Link Scanner" },
   { to: "/recruiter", label: "Recruiter" },
   { to: "/feed", label: "Threat Feed" },
+  { to: "/quiz", label: "Quiz" },
+  { to: "/report", label: "Report" },
 ] as const;
 
 export function Navbar() {

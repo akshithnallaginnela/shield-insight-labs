@@ -63,7 +63,7 @@ function RecruiterPage() {
             <button
               type="submit"
               disabled={loading || (!company && !email && !linkedin)}
-              className="mt-2 w-full rounded-lg bg-gradient-to-r from-cyber to-neon px-5 py-3 text-sm font-semibold text-background shadow-[0_0_40px_-10px_var(--cyber)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-2 w-full rounded-lg bg-gradient-to-r from-cyber to-neon px-5 py-3 text-sm font-semibold text-white shadow-[0_0_40px_-10px_var(--cyber)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? "Verifying…" : "Run Verification"}
             </button>

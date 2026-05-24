@@ -7,6 +7,7 @@ import { ThreatBadge } from "@/components/ui/ThreatBadge";
 import { RedFlagsList } from "@/components/analyzer/RedFlagsList";
 import { ThreatBreakdown } from "@/components/analyzer/ThreatBreakdown";
 import { SafeStepsChecklist } from "@/components/analyzer/SafeStepsChecklist";
+import { ShareCard } from "@/components/analyzer/ShareCard";
 import { useAnalysisStore } from "@/stores/analysisStore";
 import { analyzeMessage } from "@/lib/mockAnalyzer";
 import { ArrowLeft, Sparkles } from "lucide-react";
@@ -98,6 +99,7 @@ function AnalyzePage() {
           <div className="space-y-5">
             <ThreatBreakdown result={result} />
             <SafeStepsChecklist steps={result.safeSteps} />
+            <ShareCard result={result} />
           </div>
         </div>
       )}

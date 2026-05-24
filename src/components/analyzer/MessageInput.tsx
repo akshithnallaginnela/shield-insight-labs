@@ -70,7 +70,7 @@ export function MessageInput({ compact = false }: { compact?: boolean }) {
           type="button"
           onClick={submit}
           disabled={!text.trim()}
-          className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-cyber to-neon px-5 py-2.5 text-sm font-semibold text-background shadow-[0_0_40px_-8px_var(--cyber)] transition hover:shadow-[0_0_60px_-6px_var(--neon)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-cyber to-neon px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_40px_-8px_var(--cyber)] transition hover:shadow-[0_0_60px_-6px_var(--neon)] disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Sparkles className="h-4 w-4" />
           Analyze Message

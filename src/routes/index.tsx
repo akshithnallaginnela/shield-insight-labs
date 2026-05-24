@@ -107,7 +107,7 @@ function LandingPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3 md:justify-end">
-              <Link to="/analyze" className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyber to-neon px-5 py-2.5 text-sm font-semibold text-background shadow-[0_0_40px_-10px_var(--cyber)]">
+              <Link to="/analyze" className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyber to-neon px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_40px_-10px_var(--cyber)]">
                 Open Analyzer <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/feed" className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-background/40 px-5 py-2.5 text-sm">

@@ -1,12 +1,12 @@
 export type ScamType =
   | "job_recruiter"
-  | "romance"
   | "investment_crypto"
   | "tech_support"
   | "identity_theft"
   | "phishing"
   | "money_transfer"
   | "lottery_prize"
+  | "ai_bot_scam"
   | "unknown";
 
 export interface ScamClassification {
@@ -17,15 +17,15 @@ export interface ScamClassification {
 }
 
 export function classifyScamType(text: string): ScamClassification {
-  let scores: Record<ScamType, number> = {
+  const scores: Record<ScamType, number> = {
     job_recruiter: 0,
-    romance: 0,
     investment_crypto: 0,
     tech_support: 0,
     identity_theft: 0,
     phishing: 0,
     money_transfer: 0,
     lottery_prize: 0,
+    ai_bot_scam: 0,
     unknown: 0,
   };
   const indicators: string[] = [];
@@ -48,20 +48,18 @@ export function classifyScamType(text: string): ScamClassification {
     indicators.push("Job platform references");
   }
 
-  // ROMANCE SCAM
-  if (
-    /\b(love|miss|heart|dear|sweetheart|darling|marry|relationship|dating|feelings)\b/i.test(text)
-  ) {
-    scores.romance += 30;
-    indicators.push("Romantic/emotional language");
+  // AI BOT SCAM / TEMPLATE MESSAGE
+  if (/\b(dear sir|dear madam|valued customer|greetings|regards)\b/i.test(text)) {
+    scores.ai_bot_scam += 20;
+    indicators.push("Generic/impersonal greeting (bot signature)");
   }
-  if (/\b(i care about you|let me help|i need your help|trust me|believe me)\b/i.test(text)) {
-    scores.romance += 25;
-    indicators.push("Emotional manipulation tactics");
+  if (/\b(copy paste|template|auto|chatgpt|ai generated)\b/i.test(text)) {
+    scores.ai_bot_scam += 30;
+    indicators.push("AI/automated message indicators");
   }
-  if (/\b(emergency|sick|accident|hospital|visa|travel|business problem)\b/i.test(text)) {
-    scores.romance += 20;
-    indicators.push("Emergency money request indicators");
+  if (text.split("\n").length > 5 && /\b(dear|regards|sincerely|team)\b/i.test(text)) {
+    scores.ai_bot_scam += 15;
+    indicators.push("Long formal message structure (typical of bots)");
   }
 
   // INVESTMENT/CRYPTO SCAM

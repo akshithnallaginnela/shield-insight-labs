@@ -175,22 +175,7 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
     });
   }
 
-  // 12. ROMANCE/RELATIONSHIP BUILDING
-  const romancePatterns =
-    /\b(i love you|i miss you|let me help you|i care about you|let's be friends|marry|relationship|dating|feelings)\b/gi;
-  const romanceMatches = text.match(romancePatterns) || [];
-  if (romanceMatches.length) {
-    tactics.push({
-      tactic: "Romance/Relationship Building",
-      score: 20,
-      evidence: romanceMatches,
-      category: "trust",
-      explanation: "Builds emotional connection before exploitation",
-      severity: "high",
-    });
-  }
-
-  // 13. LOSS AVERSION
+  // 12. LOSS AVERSION
   const lossPatterns =
     /\b(don't miss out|you'll regret|everyone else (knows|has)|don't be left behind|act before it's gone)\b/gi;
   const lossMatches = text.match(lossPatterns) || [];
@@ -205,7 +190,7 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
     });
   }
 
-  // 14. TECHNICAL CONFUSION
+  // 13. TECHNICAL CONFUSION
   const technicalPatterns =
     /\b(update required|security alert|system maintenance|verify account|unusual activity detected|confirm identity)\b/gi;
   const technicalMatches = text.match(technicalPatterns) || [];
@@ -220,7 +205,7 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
     });
   }
 
-  // 15. UPFRONT PAYMENT
+  // 14. UPFRONT PAYMENT
   const paymentPatterns =
     /\b(registration fee|processing fee|security deposit|pay ₹|pay usd|payment required|send money|transfer funds)\b/gi;
   const paymentMatches = text.match(paymentPatterns) || [];

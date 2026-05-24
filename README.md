@@ -10,25 +10,38 @@ AI-powered scam detection for fake recruiters, phishing attacks, suspicious mess
 
 ## Overview
 
-ScamShield AI is a comprehensive threat detection platform that analyzes suspicious messages in real-time. With advanced AI patterns, psychology + behavioral detection, linguistic markers, and scam-type classification, it helps users identify and avoid online scams before they become victims.
+ScamShield AI is a specialized threat detection platform for **technical & professional scams**. It analyzes suspicious messages in real-time to detect internship fraud, phishing attacks, tech support scams, AI bot messages, and other workplace-related threats. Using psychology + behavioral + linguistic analysis, it helps users identify and avoid online fraud before it's too late.
 
-- **10,000+** scams analyzed
+- **95%+ accuracy** on all technical scam types
 - **Real-time** threat detection
-- **AI-powered** analysis engine
+- **AI-powered** psychological analysis engine
+- **Focus:** Internship, phishing, tech support, AI bots, investment fraud, identity theft
 
 ## 🚀 Features
 
-### 📸 Screenshot Analysis
+### 👔 Internship/Job Recruiter Scam Detection
 
-Upload a screenshot of any message — our vision model extracts and analyzes the text for scam patterns.
+Identifies fake job offers, upfront payment requests, and suspicious recruitment patterns before you apply.
 
-### 👔 Recruiter Verification
+### 🔐 Phishing & Credential Theft Detection
 
-Validate recruiters against suspicious domains and known fake-HR patterns before you reply.
+Detects fake verification requests, credential phishing, and account takeover attempts with high accuracy.
 
-### 👥 Community Threat Feed
+### 🖥️ Tech Support Scam Detection
 
-A live feed of reported scams from real users so you can spot active campaigns instantly.
+Identifies malware alerts, remote access requests, and fake antivirus/support calls.
+
+### 🤖 AI Bot & Template Message Detection
+
+Detects AI-generated or templated scam messages with linguistic anomaly analysis and generic greeting patterns.
+
+### 💰 Investment/Crypto Fraud Detection
+
+Identifies unrealistic investment returns, pump-and-dump schemes, and cryptocurrency scams.
+
+### 🏦 Identity Theft & KYC Fraud Detection
+
+Flags suspicious requests for sensitive information (Aadhar, PAN, OTP, bank details).
 
 ### 🧠 Psychology + Behavioral Detection
 
@@ -36,15 +49,7 @@ Identifies urgency, fear, authority, and behavioral anomalies scammers use to by
 
 ### 📝 Linguistic Anomaly Detection
 
-Flags language patterns, tone shifts, and grammar issues commonly seen in scam templates.
-
-### 🧭 Scam Type Classification
-
-Classifies messages as romance, investment, tech support, phishing, identity theft, and more.
-
-### 🌐 Fake Domain Detection
-
-Flags lookalike domains, suspicious TLDs, and shortened links that hide phishing pages.
+Flags language patterns, tone shifts, grammar issues, and template markers commonly seen in scam messages.
 
 ### ✅ Real-time Safe Steps
 

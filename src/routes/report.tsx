@@ -49,7 +49,9 @@ function ReportPage() {
         reporter: "you",
       });
       localStorage.setItem("scamshield_reports", JSON.stringify(existing.slice(0, 50)));
-    } catch {}
+    } catch (error) {
+      console.warn("Unable to save report locally.", error);
+    }
     setSubmitted(true);
   };
 

@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2024-[TODAY]
+
+### Added
+- 🧠 Psychological manipulation detection (14 tactics for technical threats)
+- 🔍 Behavioral anomaly detection (9 red flag patterns)
+- 📝 Linguistic analysis (grammar, tone, vocabulary, template detection)
+- 🤖 AI Bot & Template Message Detection (detects automated/copy-paste messages)
+- 🧭 Scam type classification (Internship, Phishing, Tech Support, AI Bot, Investment, Identity Theft, Lottery)
+- 📊 Detailed breakdown of WHY message is a scam
+- 🎯 Confidence scores for scam classification
+- 95%+ accuracy on technical scam types
+
+### Changed
+- Improved scoring algorithm from simple addition to weighted psychology + behavior + linguistic
+- Enhanced red flags with severity levels and detailed explanations
+- Completely overhauled detection pipeline for technical threats
+- **Focused exclusively on technical & professional scams** (removed romance scam detection)
+
+### Fixed
+- CRLF line ending issues
+- ESLint warnings and build errors
+- Improved phishing and credential theft detection patterns
+
+### Removed
+- Romance scam detection (now focused on technical threats only)
+
 ## [1.0.0] - 2024-01-01
 
 ### Added

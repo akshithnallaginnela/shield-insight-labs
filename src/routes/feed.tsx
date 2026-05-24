@@ -45,7 +45,9 @@ function FeedPage() {
     try {
       const raw = localStorage.getItem("scamshield_reports");
       if (raw) setUserReports(JSON.parse(raw));
-    } catch {}
+    } catch (error) {
+      console.warn("Unable to load local reports from storage.", error);
+    }
   }, []);
 
   const all = useMemo(() => [...userReports, ...FEED], [userReports]);

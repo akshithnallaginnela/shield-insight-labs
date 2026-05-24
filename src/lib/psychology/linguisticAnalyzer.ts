@@ -19,7 +19,9 @@ export function analyzeLinguistics(text: string): LinguisticMarker[] {
   }
 
   // 2. MIXED TONE (formal + casual)
-  const formalWords = (text.match(/\b(hereby|therefore|thus|furthermore|moreover|notwithstanding)\b/gi) || []).length;
+  const formalWords = (
+    text.match(/\b(hereby|therefore|thus|furthermore|moreover|notwithstanding)\b/gi) || []
+  ).length;
   const casualWords = (text.match(/\b(hey|lol|u|ur|gonna|wanna|btw|asap)\b/gi) || []).length;
 
   if (formalWords > 0 && casualWords > 0) {
@@ -42,8 +44,11 @@ export function analyzeLinguistics(text: string): LinguisticMarker[] {
   }
 
   // 4. FINANCIAL JARGON OVERUSE
-  const financeWords =
-    (text.match(/\b(crypto|blockchain|bitcoin|ethereum|margin|leverage|forex|commodity|derivative|arbitrage)\b/gi) || []).length;
+  const financeWords = (
+    text.match(
+      /\b(crypto|blockchain|bitcoin|ethereum|margin|leverage|forex|commodity|derivative|arbitrage)\b/gi,
+    ) || []
+  ).length;
   if (financeWords >= 3) {
     markers.push({
       marker: "Financial Jargon Overuse",
@@ -114,7 +119,7 @@ export function analyzeLinguistics(text: string): LinguisticMarker[] {
 
   // 10. EXCLAMATION OVERUSE & EMOTICONS
   const exclamations = (text.match(/!{2,}/g) || []).length;
-  const emojis = (text.match(/[😀-🙏🌀-🗿]/g) || []).length;
+  const emojis = (text.match(/[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}]/gu) || []).length;
 
   if (exclamations >= 3 || emojis >= 3) {
     markers.push({

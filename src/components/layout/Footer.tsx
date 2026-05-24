@@ -20,9 +20,21 @@ export function Footer() {
           <div>
             <p className="mb-2 font-medium text-foreground">Product</p>
             <ul className="space-y-1.5 text-muted-foreground">
-              <li><Link to="/analyze" className="hover:text-foreground">Analyzer</Link></li>
-              <li><Link to="/recruiter" className="hover:text-foreground">Recruiter Verifier</Link></li>
-              <li><Link to="/feed" className="hover:text-foreground">Threat Feed</Link></li>
+              <li>
+                <Link to="/analyze" className="hover:text-foreground">
+                  Analyzer
+                </Link>
+              </li>
+              <li>
+                <Link to="/recruiter" className="hover:text-foreground">
+                  Recruiter Verifier
+                </Link>
+              </li>
+              <li>
+                <Link to="/feed" className="hover:text-foreground">
+                  Threat Feed
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
@@ -35,8 +47,18 @@ export function Footer() {
           </div>
         </div>
         <div className="flex items-start gap-3 md:justify-end">
-          <a href="#" className="grid h-9 w-9 place-items-center rounded-lg border border-border/60 text-muted-foreground hover:text-foreground"><Github className="h-4 w-4" /></a>
-          <a href="#" className="grid h-9 w-9 place-items-center rounded-lg border border-border/60 text-muted-foreground hover:text-foreground"><Twitter className="h-4 w-4" /></a>
+          <a
+            href="#"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-border/60 text-muted-foreground hover:text-foreground"
+          >
+            <Github className="h-4 w-4" />
+          </a>
+          <a
+            href="#"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-border/60 text-muted-foreground hover:text-foreground"
+          >
+            <Twitter className="h-4 w-4" />
+          </a>
         </div>
       </div>
       <div className="border-t border-border/30 py-4 text-center text-[11px] text-muted-foreground">

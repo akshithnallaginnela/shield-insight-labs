@@ -33,7 +33,9 @@ export function RedFlagsList({ flags }: { flags: RedFlag[] }) {
                 <p className="text-sm font-semibold text-foreground">{f.label}</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">{f.description}</p>
               </div>
-              <span className="ml-auto rounded-full border border-current/40 px-2 py-0.5 text-[10px] uppercase tracking-wider">{f.severity}</span>
+              <span className="ml-auto rounded-full border border-current/40 px-2 py-0.5 text-[10px] uppercase tracking-wider">
+                {f.severity}
+              </span>
             </div>
           </div>
         );

@@ -19,27 +19,35 @@ ScamShield AI is a comprehensive threat detection platform that analyzes suspici
 ## 🚀 Features
 
 ### 📸 Screenshot Analysis
+
 Upload a screenshot of any message — our vision model extracts and analyzes the text for scam patterns.
 
 ### 👔 Recruiter Verification
+
 Validate recruiters against suspicious domains and known fake-HR patterns before you reply.
 
 ### 👥 Community Threat Feed
+
 A live feed of reported scams from real users so you can spot active campaigns instantly.
 
 ### 🧠 Psychology + Behavioral Detection
+
 Identifies urgency, fear, authority, and behavioral anomalies scammers use to bypass rational thinking.
 
 ### 📝 Linguistic Anomaly Detection
+
 Flags language patterns, tone shifts, and grammar issues commonly seen in scam templates.
 
 ### 🧭 Scam Type Classification
+
 Classifies messages as romance, investment, tech support, phishing, identity theft, and more.
 
 ### 🌐 Fake Domain Detection
+
 Flags lookalike domains, suspicious TLDs, and shortened links that hide phishing pages.
 
 ### ✅ Real-time Safe Steps
+
 Get an actionable checklist tailored to the exact threat in front of you.
 
 ## 🛠️ Tech Stack
@@ -66,12 +74,14 @@ Get an actionable checklist tailored to the exact threat in front of you.
 ## 🔧 Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/shield-insight-labs.git
    cd shield-insight-labs
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
@@ -85,27 +95,33 @@ Get an actionable checklist tailored to the exact threat in front of you.
 ## 🚀 Getting Started
 
 ### Development Server
+
 ```bash
 npm run dev
 ```
+
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### Build for Production
+
 ```bash
 npm run build
 ```
 
 ### Preview Production Build
+
 ```bash
 npm run preview
 ```
 
 ### Run Linting
+
 ```bash
 npm run lint
 ```
 
 ### Format Code
+
 ```bash
 npm run format
 ```
@@ -144,15 +160,15 @@ shield-insight-labs/
 
 ## 📍 Pages & Routes
 
-| Route | Purpose |
-|-------|---------|
-| `/` | Landing page with feature overview |
-| `/analyze` | Main threat analysis dashboard |
-| `/feed` | Community threat feed |
-| `/link-scanner` | Dedicated link/domain analysis |
-| `/recruiter` | Recruiter verification tool |
-| `/quiz` | Security awareness quiz |
-| `/report` | Report suspicious content |
+| Route           | Purpose                            |
+| --------------- | ---------------------------------- |
+| `/`             | Landing page with feature overview |
+| `/analyze`      | Main threat analysis dashboard     |
+| `/feed`         | Community threat feed              |
+| `/link-scanner` | Dedicated link/domain analysis     |
+| `/recruiter`    | Recruiter verification tool        |
+| `/quiz`         | Security awareness quiz            |
+| `/report`       | Report suspicious content          |
 
 ## 🎨 Design System
 
@@ -167,6 +183,7 @@ The project uses a modern dark-themed UI with:
 ## 🔄 State Management
 
 **Zustand Store** (`src/stores/analysisStore.ts`):
+
 - `pendingMessage` - Message awaiting analysis
 - `result` - Analysis results & threat details
 - `setResult()` - Update analysis results
@@ -175,6 +192,7 @@ The project uses a modern dark-themed UI with:
 ## 🧪 Testing
 
 The application includes mock analysis functionality for development:
+
 - `src/lib/mockAnalyzer.ts` - Mock threat detection engine
 - Test cases available in project documentation
 
@@ -210,6 +228,7 @@ wrangler deploy
 5. Open a Pull Request
 
 ### Code Standards
+
 - Use TypeScript for type safety
 - Follow ESLint rules
 - Format with Prettier
@@ -229,11 +248,13 @@ npm run format       # Format code with Prettier
 ## 🐛 Troubleshooting
 
 ### Port Already in Use
+
 ```bash
 npm run dev -- --port 3000
 ```
 
 ### Build Issues
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
@@ -241,6 +262,7 @@ npm run build
 ```
 
 ### Type Errors
+
 ```bash
 npm run build        # Verify TypeScript compilation
 npx tsc --noEmit     # Check for type issues
@@ -262,6 +284,7 @@ MIT License - see LICENSE file for details
 ## 👥 Support
 
 For issues, questions, or feature requests:
+
 - Open an [issue on GitHub](https://github.com/yourusername/shield-insight-labs/issues)
 - Check existing documentation
 - Review project wiki
@@ -279,4 +302,4 @@ For issues, questions, or feature requests:
 
 **ScamShield AI** — Built to protect, powered by intelligence.
 
-*Stop guessing. Verify. Trust with confidence.*
+_Stop guessing. Verify. Trust with confidence._

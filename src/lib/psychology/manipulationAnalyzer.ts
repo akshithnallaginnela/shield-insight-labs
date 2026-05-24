@@ -11,7 +11,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   const tactics: PsychologicalTactic[] = [];
 
   // 1. ARTIFICIAL URGENCY
-  const urgencyPatterns = /\b(urgent|immediately|act now|limited time|expires?|last chance|within \d+ (min|hour)|hurry|asap)\b/gi;
+  const urgencyPatterns =
+    /\b(urgent|immediately|act now|limited time|expires?|last chance|within \d+ (min|hour)|hurry|asap)\b/gi;
   const urgencyMatches = text.match(urgencyPatterns) || [];
   if (urgencyMatches.length) {
     tactics.push({
@@ -25,7 +26,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 2. FEAR & THREAT
-  const fearPatterns = /\b(account (will be |)blocked|suspended|frozen|kyc expired|funds frozen|legal action|police|lawsuit|permanent ban)\b/gi;
+  const fearPatterns =
+    /\b(account (will be |)blocked|suspended|frozen|kyc expired|funds frozen|legal action|police|lawsuit|permanent ban)\b/gi;
   const fearMatches = text.match(fearPatterns) || [];
   if (fearMatches.length) {
     tactics.push({
@@ -39,7 +41,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 3. GREED EXPLOITATION
-  const greedPatterns = /\b(easy money|no experience|guaranteed returns?|unlimited income|daily income|passive income|work from home|earn ₹|quick cash|100% profit)\b/gi;
+  const greedPatterns =
+    /\b(easy money|no experience|guaranteed returns?|unlimited income|daily income|passive income|work from home|earn ₹|quick cash|100% profit)\b/gi;
   const greedMatches = text.match(greedPatterns) || [];
   if (greedMatches.length) {
     tactics.push({
@@ -53,7 +56,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 4. FALSE AUTHORITY
-  const authorityPatterns = /\b(bank official|police|government|ceo|director|manager|compliance team|security team|official|authorized)\b/gi;
+  const authorityPatterns =
+    /\b(bank official|police|government|ceo|director|manager|compliance team|security team|official|authorized)\b/gi;
   const authorityMatches = text.match(authorityPatterns) || [];
   if (authorityMatches.length) {
     tactics.push({
@@ -67,7 +71,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 5. CREDENTIAL REQUEST
-  const credentialPatterns = /\b(otp|password|cvv|pin|verify|confirm|credential|secret code|one-time password|aadhar|pan|bank details|account number|card details)\b/gi;
+  const credentialPatterns =
+    /\b(otp|password|cvv|pin|verify|confirm|credential|secret code|one-time password|aadhar|pan|bank details|account number|card details)\b/gi;
   const credentialMatches = text.match(credentialPatterns) || [];
   if (credentialMatches.length) {
     tactics.push({
@@ -81,7 +86,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 6. SOCIAL PROOF
-  const socialProofPatterns = /\b(10,?000\+ |everyone|all|trusted by millions|already joined|you're the only one|most popular|best rated)\b/gi;
+  const socialProofPatterns =
+    /\b(10,?000\+ |everyone|all|trusted by millions|already joined|you're the only one|most popular|best rated)\b/gi;
   const socialProofMatches = text.match(socialProofPatterns) || [];
   if (socialProofMatches.length) {
     tactics.push({
@@ -95,7 +101,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 7. SCARCITY PRESSURE
-  const scarcityPatterns = /\b(only \d+ (slots|places|seats)|limited availability|exclusive|first come first served|hurry|slots filling fast)\b/gi;
+  const scarcityPatterns =
+    /\b(only \d+ (slots|places|seats)|limited availability|exclusive|first come first served|hurry|slots filling fast)\b/gi;
   const scarcityMatches = text.match(scarcityPatterns) || [];
   if (scarcityMatches.length) {
     tactics.push({
@@ -109,7 +116,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 8. RECIPROCITY EXPLOITATION
-  const reciprocityPatterns = /\b(we (have |)helped you|you owe us|as a favor|in return|we need your help|give back)\b/gi;
+  const reciprocityPatterns =
+    /\b(we (have |)helped you|you owe us|as a favor|in return|we need your help|give back)\b/gi;
   const reciprocityMatches = text.match(reciprocityPatterns) || [];
   if (reciprocityMatches.length) {
     tactics.push({
@@ -123,7 +131,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 9. COMMITMENT ESCALATION
-  const escalationPatterns = /\b(just verify once|small fee first|test withdrawal|try it out|free trial|no risk)\b/gi;
+  const escalationPatterns =
+    /\b(just verify once|small fee first|test withdrawal|try it out|free trial|no risk)\b/gi;
   const escalationMatches = text.match(escalationPatterns) || [];
   if (escalationMatches.length) {
     tactics.push({
@@ -137,7 +146,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 10. AUTHORITY CLONING
-  const cloningPatterns = /\b(official|verified|official channel|official page|official account|real account|authentic|certified|legitimate)\b/gi;
+  const cloningPatterns =
+    /\b(official|verified|official channel|official page|official account|real account|authentic|certified|legitimate)\b/gi;
   const cloningMatches = text.match(cloningPatterns) || [];
   if (cloningMatches.length) {
     tactics.push({
@@ -151,7 +161,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 11. CURIOSITY EXPLOITATION
-  const curiosityPatterns = /\b(click here|tap here|see more|shocking|unbelievable|you won't believe|reveal|secret|discover|exclusive)\b/gi;
+  const curiosityPatterns =
+    /\b(click here|tap here|see more|shocking|unbelievable|you won't believe|reveal|secret|discover|exclusive)\b/gi;
   const curiosityMatches = text.match(curiosityPatterns) || [];
   if (curiosityMatches.length) {
     tactics.push({
@@ -165,7 +176,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 12. ROMANCE/RELATIONSHIP BUILDING
-  const romancePatterns = /\b(i love you|i miss you|let me help you|i care about you|let's be friends|marry|relationship|dating|feelings)\b/gi;
+  const romancePatterns =
+    /\b(i love you|i miss you|let me help you|i care about you|let's be friends|marry|relationship|dating|feelings)\b/gi;
   const romanceMatches = text.match(romancePatterns) || [];
   if (romanceMatches.length) {
     tactics.push({
@@ -179,7 +191,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 13. LOSS AVERSION
-  const lossPatterns = /\b(don't miss out|you'll regret|everyone else (knows|has)|don't be left behind|act before it's gone)\b/gi;
+  const lossPatterns =
+    /\b(don't miss out|you'll regret|everyone else (knows|has)|don't be left behind|act before it's gone)\b/gi;
   const lossMatches = text.match(lossPatterns) || [];
   if (lossMatches.length) {
     tactics.push({
@@ -193,7 +206,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 14. TECHNICAL CONFUSION
-  const technicalPatterns = /\b(update required|security alert|system maintenance|verify account|unusual activity detected|confirm identity)\b/gi;
+  const technicalPatterns =
+    /\b(update required|security alert|system maintenance|verify account|unusual activity detected|confirm identity)\b/gi;
   const technicalMatches = text.match(technicalPatterns) || [];
   if (technicalMatches.length) {
     tactics.push({
@@ -207,7 +221,8 @@ export function analyzePsychology(text: string): PsychologicalTactic[] {
   }
 
   // 15. UPFRONT PAYMENT
-  const paymentPatterns = /\b(registration fee|processing fee|security deposit|pay ₹|pay usd|payment required|send money|transfer funds)\b/gi;
+  const paymentPatterns =
+    /\b(registration fee|processing fee|security deposit|pay ₹|pay usd|payment required|send money|transfer funds)\b/gi;
   const paymentMatches = text.match(paymentPatterns) || [];
   if (paymentMatches.length) {
     tactics.push({

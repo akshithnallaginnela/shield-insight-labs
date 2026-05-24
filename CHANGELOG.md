@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-01-01
 
 ### Added
+
 - Initial release of ScamShield AI
 - AI-powered threat analysis engine
 - Screenshot analysis with vision model
@@ -25,18 +26,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Threat reporting feature
 
 ### Changed
+
 - N/A (First release)
 
 ### Deprecated
+
 - N/A (First release)
 
 ### Removed
+
 - N/A (First release)
 
 ### Fixed
+
 - N/A (First release)
 
 ### Security
+
 - Implemented Content Security Policy headers
 - No data collection or storage
 - Client-side processing only
@@ -47,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Planned
+
 - [ ] Advanced ML pattern detection
 - [ ] Browser extension integration
 - [ ] REST API for third-party integrations

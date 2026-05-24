@@ -1,6 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Link2, Sparkles, ShieldAlert, ShieldCheck, AlertTriangle, Globe, Clock, ArrowRight } from "lucide-react";
+import {
+  Link2,
+  Sparkles,
+  ShieldAlert,
+  ShieldCheck,
+  AlertTriangle,
+  Globe,
+  Clock,
+  ArrowRight,
+} from "lucide-react";
 import { ThreatBadge } from "@/components/ui/ThreatBadge";
 import type { ThreatLevel } from "@/lib/mockAnalyzer";
 
@@ -8,9 +17,17 @@ export const Route = createFileRoute("/link-scanner")({
   head: () => ({
     meta: [
       { title: "Link Scanner — ScamShield AI" },
-      { name: "description", content: "Paste a suspicious URL to check domain reputation, redirect chain and phishing signals." },
+      {
+        name: "description",
+        content:
+          "Paste a suspicious URL to check domain reputation, redirect chain and phishing signals.",
+      },
       { property: "og:title", content: "Link Scanner — ScamShield AI" },
-      { property: "og:description", content: "Paste a suspicious URL to check domain reputation, redirect chain and phishing signals." },
+      {
+        property: "og:description",
+        content:
+          "Paste a suspicious URL to check domain reputation, redirect chain and phishing signals.",
+      },
     ],
   }),
   component: LinkScannerPage,
@@ -26,7 +43,18 @@ interface LinkReport {
   redirectChain: string[];
 }
 
-const SUSPICIOUS_TLDS = ["xyz", "top", "click", "work", "monster", "cyou", "loan", "zip", "tk", "ml"];
+const SUSPICIOUS_TLDS = [
+  "xyz",
+  "top",
+  "click",
+  "work",
+  "monster",
+  "cyou",
+  "loan",
+  "zip",
+  "tk",
+  "ml",
+];
 const SHORTENERS = ["bit.ly", "tinyurl.com", "cutt.ly", "rb.gy", "t.co", "shorturl.at"];
 
 function scanLink(raw: string): LinkReport | null {
@@ -41,8 +69,12 @@ function scanLink(raw: string): LinkReport | null {
     const sus = SUSPICIOUS_TLDS.includes(tld);
     signals.push(
       sus
-        ? { label: "Top-level domain", ok: false, detail: `.${tld} is frequently abused by phishing kits.` }
-        : { label: "Top-level domain", ok: true, detail: `.${tld} is a common, lower-risk TLD.` }
+        ? {
+            label: "Top-level domain",
+            ok: false,
+            detail: `.${tld} is frequently abused by phishing kits.`,
+          }
+        : { label: "Top-level domain", ok: true, detail: `.${tld} is a common, lower-risk TLD.` },
     );
     if (sus) score += 30;
 
@@ -50,31 +82,48 @@ function scanLink(raw: string): LinkReport | null {
     signals.push(
       isShort
         ? { label: "URL shortener", ok: false, detail: `${domain} hides the real destination.` }
-        : { label: "URL shortener", ok: true, detail: "Not a known link shortener." }
+        : { label: "URL shortener", ok: true, detail: "Not a known link shortener." },
     );
     if (isShort) score += 20;
 
     const hasNumbers = /\d{3,}/.test(domain);
     signals.push(
       hasNumbers
-        ? { label: "Numeric noise in domain", ok: false, detail: "Long digit sequences are typical of generated phishing domains." }
-        : { label: "Clean domain string", ok: true, detail: "No suspicious numeric noise detected." }
+        ? {
+            label: "Numeric noise in domain",
+            ok: false,
+            detail: "Long digit sequences are typical of generated phishing domains.",
+          }
+        : {
+            label: "Clean domain string",
+            ok: true,
+            detail: "No suspicious numeric noise detected.",
+          },
     );
     if (hasNumbers) score += 12;
 
-    const lookalike = /(g[o0]{2}gle|amaz[o0]n|payp[a4]l|micr[o0]s[o0]ft|netfllx|faceb[o0]{2}k)/i.test(domain);
+    const lookalike =
+      /(g[o0]{2}gle|amaz[o0]n|payp[a4]l|micr[o0]s[o0]ft|netfllx|faceb[o0]{2}k)/i.test(domain);
     if (lookalike) {
-      signals.push({ label: "Lookalike brand", ok: false, detail: "Domain mimics a well-known brand using character substitution." });
+      signals.push({
+        label: "Lookalike brand",
+        ok: false,
+        detail: "Domain mimics a well-known brand using character substitution.",
+      });
       score += 30;
     } else {
-      signals.push({ label: "No brand impersonation", ok: true, detail: "Domain doesn't mimic a known brand." });
+      signals.push({
+        label: "No brand impersonation",
+        ok: true,
+        detail: "Domain doesn't mimic a known brand.",
+      });
     }
 
     const httpOnly = u.protocol === "http:";
     signals.push(
       httpOnly
         ? { label: "HTTPS", ok: false, detail: "Site is not served over HTTPS." }
-        : { label: "HTTPS", ok: true, detail: "Encrypted connection (HTTPS)." }
+        : { label: "HTTPS", ok: true, detail: "Encrypted connection (HTTPS)." },
     );
     if (httpOnly) score += 10;
 
@@ -82,9 +131,16 @@ function scanLink(raw: string): LinkReport | null {
     const level: ThreatLevel = score >= 65 ? "critical" : score >= 35 ? "suspicious" : "safe";
 
     // Mock additional intel
-    const domainAgeDays = Math.max(1, Math.floor(((sus || isShort) ? 12 : 1400) * (0.7 + Math.random() * 0.6)));
+    const domainAgeDays = Math.max(
+      1,
+      Math.floor((sus || isShort ? 12 : 1400) * (0.7 + Math.random() * 0.6)),
+    );
     const redirectChain = isShort
-      ? [domain, `tracker.${domain.split(".")[0]}.net`, `final-${tld === "xyz" ? "phish" : "site"}.com`]
+      ? [
+          domain,
+          `tracker.${domain.split(".")[0]}.net`,
+          `final-${tld === "xyz" ? "phish" : "site"}.com`,
+        ]
       : [domain];
 
     return { url, domain, score, level, signals, domainAgeDays, redirectChain };
@@ -162,23 +218,56 @@ function LinkScannerPage() {
           <div className="glass-card rounded-2xl p-5">
             <p className="text-xs uppercase tracking-wider text-muted-foreground">Risk Score</p>
             <p className="mt-1 font-mono text-4xl font-semibold tabular-nums text-foreground">
-              {report.score}<span className="text-base text-muted-foreground">/100</span>
+              {report.score}
+              <span className="text-base text-muted-foreground">/100</span>
             </p>
-            <div className="mt-3"><ThreatBadge level={report.level} /></div>
+            <div className="mt-3">
+              <ThreatBadge level={report.level} />
+            </div>
             <div className="mt-5 space-y-3 text-sm">
-              <div className="flex items-start gap-2"><Globe className="mt-0.5 h-4 w-4 text-primary" /><div><p className="text-xs uppercase tracking-wider text-muted-foreground">Domain</p><p className="font-mono text-foreground break-all">{report.domain}</p></div></div>
-              <div className="flex items-start gap-2"><Clock className="mt-0.5 h-4 w-4 text-primary" /><div><p className="text-xs uppercase tracking-wider text-muted-foreground">Domain age</p><p className="text-foreground">{report.domainAgeDays} days <span className="text-xs text-muted-foreground">{report.domainAgeDays < 90 ? "(very new — high risk)" : "(established)"}</span></p></div></div>
+              <div className="flex items-start gap-2">
+                <Globe className="mt-0.5 h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Domain</p>
+                  <p className="font-mono text-foreground break-all">{report.domain}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <Clock className="mt-0.5 h-4 w-4 text-primary" />
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                    Domain age
+                  </p>
+                  <p className="text-foreground">
+                    {report.domainAgeDays} days{" "}
+                    <span className="text-xs text-muted-foreground">
+                      {report.domainAgeDays < 90 ? "(very new — high risk)" : "(established)"}
+                    </span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="space-y-5">
             <div className="glass-card rounded-2xl p-5">
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Signals</h3>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Signals
+              </h3>
               <ul className="space-y-2">
                 {report.signals.map((s, i) => (
-                  <li key={i} className={`flex items-start gap-3 rounded-lg border p-3 ${s.ok ? "border-safe/30 bg-safe/5" : "border-danger/30 bg-danger/5"}`}>
-                    <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full ${s.ok ? "bg-safe/20 text-safe" : "bg-danger/20 text-danger"}`}>
-                      {s.ok ? <ShieldCheck className="h-3 w-3" /> : <ShieldAlert className="h-3 w-3" />}
+                  <li
+                    key={i}
+                    className={`flex items-start gap-3 rounded-lg border p-3 ${s.ok ? "border-safe/30 bg-safe/5" : "border-danger/30 bg-danger/5"}`}
+                  >
+                    <span
+                      className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full ${s.ok ? "bg-safe/20 text-safe" : "bg-danger/20 text-danger"}`}
+                    >
+                      {s.ok ? (
+                        <ShieldCheck className="h-3 w-3" />
+                      ) : (
+                        <ShieldAlert className="h-3 w-3" />
+                      )}
                     </span>
                     <div>
                       <p className="text-sm font-medium">{s.label}</p>
@@ -195,15 +284,24 @@ function LinkScannerPage() {
               </h3>
               <ol className="space-y-2">
                 {report.redirectChain.map((hop, i) => (
-                  <li key={i} className="flex items-center gap-3 rounded-lg border border-border bg-white/60 p-2.5">
-                    <span className="grid h-6 w-6 place-items-center rounded-full bg-primary/10 font-mono text-xs text-primary">{i + 1}</span>
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 rounded-lg border border-border bg-white/60 p-2.5"
+                  >
+                    <span className="grid h-6 w-6 place-items-center rounded-full bg-primary/10 font-mono text-xs text-primary">
+                      {i + 1}
+                    </span>
                     <span className="font-mono text-sm text-foreground break-all">{hop}</span>
-                    {i < report.redirectChain.length - 1 && <ArrowRight className="ml-auto h-3 w-3 text-muted-foreground" />}
+                    {i < report.redirectChain.length - 1 && (
+                      <ArrowRight className="ml-auto h-3 w-3 text-muted-foreground" />
+                    )}
                   </li>
                 ))}
               </ol>
               {report.redirectChain.length === 1 && (
-                <p className="mt-2 text-xs text-muted-foreground">Direct link — no redirects detected.</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Direct link — no redirects detected.
+                </p>
               )}
             </div>
           </div>

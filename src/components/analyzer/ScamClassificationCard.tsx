@@ -7,7 +7,9 @@ export function ScamClassificationCard({ classification }: { classification: Sca
 
   return (
     <Card className="p-5 border-neon/20 bg-neon/5">
-      <h3 className="text-sm font-semibold uppercase tracking-wider mb-3 text-neon">Scam Type Classification</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-wider mb-3 text-neon">
+        Scam Type Classification
+      </h3>
       <p className="font-semibold text-foreground text-sm">{label.toUpperCase()}</p>
       <p className="text-xs text-muted-foreground mt-1">{classification.explanation}</p>
 
@@ -24,7 +26,10 @@ export function ScamClassificationCard({ classification }: { classification: Sca
       <div className="mt-3 flex flex-wrap gap-1">
         {indicators.length ? (
           indicators.map((indicator, i) => (
-            <span key={i} className="px-2 py-0.5 bg-background/60 rounded text-[10px] text-muted-foreground">
+            <span
+              key={i}
+              className="px-2 py-0.5 bg-background/60 rounded text-[10px] text-muted-foreground"
+            >
               {indicator}
             </span>
           ))

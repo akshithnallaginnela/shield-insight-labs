@@ -7,9 +7,17 @@ export const Route = createFileRoute("/report")({
   head: () => ({
     meta: [
       { title: "Report a Scam — ScamShield AI" },
-      { name: "description", content: "Help protect the community by reporting a scam. Your report appears in the live Threat Feed." },
+      {
+        name: "description",
+        content:
+          "Help protect the community by reporting a scam. Your report appears in the live Threat Feed.",
+      },
       { property: "og:title", content: "Report a Scam — ScamShield AI" },
-      { property: "og:description", content: "Help protect the community by reporting a scam. Your report appears in the live Threat Feed." },
+      {
+        property: "og:description",
+        content:
+          "Help protect the community by reporting a scam. Your report appears in the live Threat Feed.",
+      },
     ],
   }),
   component: ReportPage,
@@ -31,7 +39,15 @@ function ReportPage() {
     // Persist locally so the feed can pick it up later (best-effort).
     try {
       const existing = JSON.parse(localStorage.getItem("scamshield_reports") ?? "[]");
-      existing.unshift({ id: crypto.randomUUID(), title, category, severity, description, minutesAgo: 0, reporter: "you" });
+      existing.unshift({
+        id: crypto.randomUUID(),
+        title,
+        category,
+        severity,
+        description,
+        minutesAgo: 0,
+        reporter: "you",
+      });
       localStorage.setItem("scamshield_reports", JSON.stringify(existing.slice(0, 50)));
     } catch {}
     setSubmitted(true);
@@ -46,14 +62,26 @@ function ReportPage() {
           </div>
           <h1 className="mt-4 font-display text-2xl font-bold">Report submitted</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Thank you. Reports like yours help thousands stay safe. Your submission has been added to the local feed.
+            Thank you. Reports like yours help thousands stay safe. Your submission has been added
+            to the local feed.
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
-            <Link to="/feed" className="rounded-lg bg-gradient-brand px-4 py-2 text-sm font-semibold text-white">View Threat Feed</Link>
+            <Link
+              to="/feed"
+              className="rounded-lg bg-gradient-brand px-4 py-2 text-sm font-semibold text-white"
+            >
+              View Threat Feed
+            </Link>
             <button
-              onClick={() => { setSubmitted(false); setTitle(""); setDescription(""); }}
+              onClick={() => {
+                setSubmitted(false);
+                setTitle("");
+                setDescription("");
+              }}
               className="rounded-lg border border-border bg-white/70 px-4 py-2 text-sm font-medium"
-            >Report another</button>
+            >
+              Report another
+            </button>
           </div>
         </div>
       </div>
@@ -74,9 +102,14 @@ function ReportPage() {
         </p>
       </div>
 
-      <form onSubmit={submit} className="glass-card animated-border mt-8 space-y-5 rounded-2xl p-6 md:p-8">
+      <form
+        onSubmit={submit}
+        className="glass-card animated-border mt-8 space-y-5 rounded-2xl p-6 md:p-8"
+      >
         <label className="block">
-          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">Short title</span>
+          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">
+            Short title
+          </span>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -96,9 +129,13 @@ function ReportPage() {
                   key={c}
                   onClick={() => setCategory(c)}
                   className={`rounded-full border px-3 py-1.5 text-xs transition ${
-                    category === c ? "border-primary/60 bg-primary/15 text-primary" : "border-border bg-white/60 text-muted-foreground hover:text-foreground"
+                    category === c
+                      ? "border-primary/60 bg-primary/15 text-primary"
+                      : "border-border bg-white/60 text-muted-foreground hover:text-foreground"
                   }`}
-                >{c}</button>
+                >
+                  {c}
+                </button>
               ))}
             </div>
           </label>
@@ -112,17 +149,21 @@ function ReportPage() {
                   s === "high"
                     ? "border-danger/60 bg-danger/10 text-danger"
                     : s === "medium"
-                    ? "border-warning/60 bg-warning/10 text-warning"
-                    : "border-muted-foreground/60 bg-muted text-foreground";
+                      ? "border-warning/60 bg-warning/10 text-warning"
+                      : "border-muted-foreground/60 bg-muted text-foreground";
                 return (
                   <button
                     type="button"
                     key={s}
                     onClick={() => setSeverity(s)}
                     className={`flex-1 rounded-lg border px-3 py-2 text-xs uppercase tracking-wider transition ${
-                      sel ? selCls : "border-border bg-white/60 text-muted-foreground hover:text-foreground"
+                      sel
+                        ? selCls
+                        : "border-border bg-white/60 text-muted-foreground hover:text-foreground"
                     }`}
-                  >{s}</button>
+                  >
+                    {s}
+                  </button>
                 );
               })}
             </div>
@@ -130,7 +171,9 @@ function ReportPage() {
         </div>
 
         <label className="block">
-          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">Description</span>
+          <span className="mb-1.5 block text-xs font-medium text-muted-foreground">
+            Description
+          </span>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -139,7 +182,9 @@ function ReportPage() {
             placeholder="What happened? Include the platform, what the scammer asked for, and any red flags you noticed."
             className="w-full resize-none rounded-lg border border-border bg-white/70 p-3 text-sm leading-relaxed focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
-          <p className="mt-1 text-right text-[11px] text-muted-foreground">{description.length}/500</p>
+          <p className="mt-1 text-right text-[11px] text-muted-foreground">
+            {description.length}/500
+          </p>
         </label>
 
         <button

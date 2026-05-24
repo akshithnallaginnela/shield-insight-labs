@@ -8,9 +8,15 @@ export const Route = createFileRoute("/recruiter")({
   head: () => ({
     meta: [
       { title: "Recruiter Verifier — ScamShield AI" },
-      { name: "description", content: "Verify recruiters and job offers against suspicious domain and pattern signals." },
+      {
+        name: "description",
+        content: "Verify recruiters and job offers against suspicious domain and pattern signals.",
+      },
       { property: "og:title", content: "Recruiter Verifier — ScamShield AI" },
-      { property: "og:description", content: "Verify recruiters and job offers against suspicious domain and pattern signals." },
+      {
+        property: "og:description",
+        content: "Verify recruiters and job offers against suspicious domain and pattern signals.",
+      },
     ],
   }),
   component: RecruiterPage,
@@ -43,22 +49,44 @@ function RecruiterPage() {
           Is this recruiter <span className="text-gradient">legit</span>?
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
-          Run a multi-signal check against known fake-HR patterns, domain reputation, and identity consistency.
+          Run a multi-signal check against known fake-HR patterns, domain reputation, and identity
+          consistency.
         </p>
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
-        <form onSubmit={submit} className="glass-card animated-border relative overflow-hidden rounded-2xl p-6">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Recruiter Details</h2>
+        <form
+          onSubmit={submit}
+          className="glass-card animated-border relative overflow-hidden rounded-2xl p-6"
+        >
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Recruiter Details
+          </h2>
           <div className="space-y-4">
             <Field icon={<Briefcase className="h-4 w-4" />} label="Company name">
-              <input value={company} onChange={(e) => setCompany(e.target.value)} placeholder="e.g. Amazon" className={inputCls} />
+              <input
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder="e.g. Amazon"
+                className={inputCls}
+              />
             </Field>
             <Field icon={<Mail className="h-4 w-4" />} label="Recruiter email">
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="hr@company.com" className={inputCls} />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="hr@company.com"
+                className={inputCls}
+              />
             </Field>
             <Field icon={<Linkedin className="h-4 w-4" />} label="LinkedIn profile URL">
-              <input value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/in/…" className={inputCls} />
+              <input
+                value={linkedin}
+                onChange={(e) => setLinkedin(e.target.value)}
+                placeholder="https://linkedin.com/in/…"
+                className={inputCls}
+              />
             </Field>
             <button
               type="submit"
@@ -71,7 +99,9 @@ function RecruiterPage() {
         </form>
 
         <div className="glass-card rounded-2xl p-6">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Trust Report</h2>
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Trust Report
+          </h2>
           {!result && !loading && (
             <div className="flex h-full min-h-[280px] flex-col items-center justify-center text-center text-sm text-muted-foreground">
               <div className="grid h-14 w-14 place-items-center rounded-full border border-border/60 bg-background/40">
@@ -91,15 +121,25 @@ function RecruiterPage() {
             <div>
               <div className="flex items-center justify-between gap-4 rounded-xl border border-border/60 bg-background/40 p-4">
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Trust Score</p>
-                  <p className="mt-1 font-mono text-3xl font-semibold tabular-nums">{result.trustScore}<span className="text-base text-muted-foreground">/100</span></p>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                    Trust Score
+                  </p>
+                  <p className="mt-1 font-mono text-3xl font-semibold tabular-nums">
+                    {result.trustScore}
+                    <span className="text-base text-muted-foreground">/100</span>
+                  </p>
                 </div>
                 <ThreatBadge level={result.level} />
               </div>
               <ul className="mt-4 space-y-2">
                 {result.signals.map((s, i) => (
-                  <li key={i} className={`flex items-start gap-3 rounded-lg border p-3 ${s.ok ? "border-safe/30 bg-safe/5" : "border-danger/30 bg-danger/5"}`}>
-                    <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full ${s.ok ? "bg-safe/20 text-safe" : "bg-danger/20 text-danger"}`}>
+                  <li
+                    key={i}
+                    className={`flex items-start gap-3 rounded-lg border p-3 ${s.ok ? "border-safe/30 bg-safe/5" : "border-danger/30 bg-danger/5"}`}
+                  >
+                    <span
+                      className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full ${s.ok ? "bg-safe/20 text-safe" : "bg-danger/20 text-danger"}`}
+                    >
                       {s.ok ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
                     </span>
                     <div>
@@ -120,10 +160,21 @@ function RecruiterPage() {
 const inputCls =
   "w-full rounded-lg border border-border/60 bg-background/40 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-cyber/60 focus:outline-none focus:ring-2 focus:ring-cyber/30";
 
-function Field({ icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
+function Field({
+  icon,
+  label,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <label className="block">
-      <span className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">{icon}{label}</span>
+      <span className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+        {icon}
+        {label}
+      </span>
       {children}
     </label>
   );

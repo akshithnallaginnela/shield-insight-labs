@@ -3,6 +3,7 @@
 We're thrilled to announce the first production release of ScamShield AI, a comprehensive threat detection platform built to stop phishing, detect fraud, and protect users from online scams.
 
 ## ⚡ MVP Status
+
 This is a **minimal efficient version (MVP)** with core functionality. Much more is coming very soon! We're rapidly iterating and adding powerful features based on user feedback.
 
 ---
@@ -10,6 +11,7 @@ This is a **minimal efficient version (MVP)** with core functionality. Much more
 ## ✨ What's Included in v1.0.0
 
 ### 🎯 Core Features
+
 - **📸 Screenshot Analysis** — Upload screenshots for instant scam detection
 - **👔 Recruiter Verification** — Validate recruiters against known patterns
 - **👥 Community Threat Feed** — Real-time threat intelligence from users
@@ -18,6 +20,7 @@ This is a **minimal efficient version (MVP)** with core functionality. Much more
 - **✅ Real-time Safe Steps** — Actionable checklists tailored to threats
 
 ### 🚀 Platform Features
+
 - **No Login Required** — Instant access, zero friction
 - **No Data Storage** — All analysis happens client-side
 - **Mobile Optimized** — Fully responsive design
@@ -25,11 +28,13 @@ This is a **minimal efficient version (MVP)** with core functionality. Much more
 - **Shareable Results** — Export and share threat analysis
 
 ## 📊 By The Numbers
+
 - **10,000+** scams analyzed
 - **Real-time** threat detection
 - **AI-powered** analysis engine
 
 ## 🔐 Security & Privacy First
+
 - No tracking or analytics cookies
 - Client-side processing only
 - HTTPS enforced in production
@@ -37,6 +42,7 @@ This is a **minimal efficient version (MVP)** with core functionality. Much more
 - Secure by default
 
 ## 🛠️ Built With Modern Tech
+
 - React 19 + TypeScript
 - TanStack Start/Router
 - Tailwind CSS v4
@@ -45,6 +51,7 @@ This is a **minimal efficient version (MVP)** with core functionality. Much more
 - Cloudflare deployment ready
 
 ## 📚 Complete Documentation
+
 - 📖 [Contributing Guide](CONTRIBUTING.md)
 - 🤝 [Code of Conduct](CODE_OF_CONDUCT.md)
 - 🔐 [Security Policy](SECURITY.md)
@@ -54,6 +61,7 @@ This is a **minimal efficient version (MVP)** with core functionality. Much more
 ## 🚀 What's Coming Very Soon
 
 We have an exciting roadmap ahead:
+
 - 🤖 Advanced ML-based pattern detection
 - 🔌 Browser extension integration
 - 🔗 REST API for third-party integrations
@@ -66,11 +74,13 @@ We have an exciting roadmap ahead:
 ## 💡 We Want Your Feedback
 
 This is just the beginning! Help shape the future:
+
 - Found a bug? [Report it](https://github.com/yourusername/shield-insight-labs/issues)
 - Have a feature idea? [Share it](https://github.com/yourusername/shield-insight-labs/issues)
 - Want to contribute? [Join us](CONTRIBUTING.md)
 
 ## 🙏 Thanks
+
 Special thanks to all contributors, beta testers, and the security community for making this launch possible.
 
 ---
@@ -79,4 +89,4 @@ Special thanks to all contributors, beta testers, and the security community for
 
 🛡️ **Try it now**: Start analyzing suspicious messages in under 3 seconds!
 
-*v1.0.0 MVP — More powerful features arriving soon!*
+_v1.0.0 MVP — More powerful features arriving soon!_

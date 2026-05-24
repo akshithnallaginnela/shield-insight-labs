@@ -18,12 +18,16 @@ export function LinguisticBreakdown({ markers, score }: Props) {
 
   return (
     <Card className="p-5 border-neon/20 bg-neon/5">
-      <h3 className="font-semibold text-sm uppercase tracking-wider mb-3 text-neon">📝 Linguistic Markers</h3>
+      <h3 className="font-semibold text-sm uppercase tracking-wider mb-3 text-neon">
+        📝 Linguistic Markers
+      </h3>
 
       <div className="space-y-3">
         {markers.map((marker, idx) => (
           <div key={`${marker.marker}-${idx}`} className="flex items-start gap-3 text-xs">
-            <span className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide ${TYPE_STYLE[marker.type]}`}>
+            <span
+              className={`rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide ${TYPE_STYLE[marker.type]}`}
+            >
               {marker.type}
             </span>
             <div className="flex-1">

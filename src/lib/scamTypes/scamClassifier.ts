@@ -31,7 +31,11 @@ export function classifyScamType(text: string): ScamClassification {
   const indicators: string[] = [];
 
   // JOB/RECRUITER SCAM
-  if (/\b(job|position|recruiter|hiring|interview|salary|hr|recruitment|apply|role|vacancy)\b/i.test(text)) {
+  if (
+    /\b(job|position|recruiter|hiring|interview|salary|hr|recruitment|apply|role|vacancy)\b/i.test(
+      text,
+    )
+  ) {
     scores.job_recruiter += 30;
     indicators.push("Job/recruitment keywords");
   }
@@ -45,7 +49,9 @@ export function classifyScamType(text: string): ScamClassification {
   }
 
   // ROMANCE SCAM
-  if (/\b(love|miss|heart|dear|sweetheart|darling|marry|relationship|dating|feelings)\b/i.test(text)) {
+  if (
+    /\b(love|miss|heart|dear|sweetheart|darling|marry|relationship|dating|feelings)\b/i.test(text)
+  ) {
     scores.romance += 30;
     indicators.push("Romantic/emotional language");
   }
@@ -59,7 +65,9 @@ export function classifyScamType(text: string): ScamClassification {
   }
 
   // INVESTMENT/CRYPTO SCAM
-  if (/\b(crypto|bitcoin|ethereum|blockchain|forex|stock|investment|roi|returns|profit)\b/i.test(text)) {
+  if (
+    /\b(crypto|bitcoin|ethereum|blockchain|forex|stock|investment|roi|returns|profit)\b/i.test(text)
+  ) {
     scores.investment_crypto += 35;
     indicators.push("Crypto/investment keywords");
   }
@@ -111,7 +119,11 @@ export function classifyScamType(text: string): ScamClassification {
   }
 
   // MONEY TRANSFER SCAM
-  if (/\b(upi|paytm|phone pe|google pay|bank transfer|western union|money gram|send money)\b/i.test(text)) {
+  if (
+    /\b(upi|paytm|phone pe|google pay|bank transfer|western union|money gram|send money)\b/i.test(
+      text,
+    )
+  ) {
     scores.money_transfer += 30;
     indicators.push("Money transfer method");
   }

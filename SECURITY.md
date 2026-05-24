@@ -8,6 +8,7 @@ If you discover a security vulnerability in ScamShield AI, please do **NOT** ope
 **Subject**: [SECURITY] Vulnerability Report
 
 Please include:
+
 - Description of the vulnerability
 - Steps to reproduce
 - Potential impact
@@ -22,21 +23,25 @@ Please include:
 ## Security Considerations
 
 ### Data Privacy
+
 - No user data is stored or collected
 - All analysis happens client-side
 - No tracking or analytics cookies
 
 ### Input Validation
+
 - All user inputs are validated
 - XSS prevention implemented
 - SQL injection not applicable (no backend DB)
 
 ### Dependencies
+
 - Regular security audits of dependencies
 - Automated dependency updates via GitHub
 - Regular vulnerability scanning
 
 ### Deployment Security
+
 - HTTPS enforced on production
 - Content Security Policy headers
 - Secure cookie settings
@@ -60,6 +65,7 @@ Please include:
 ## Security Updates
 
 Security updates will be:
+
 - Released as critical patches
 - Clearly documented in release notes
 - Announced prominently
@@ -67,6 +73,7 @@ Security updates will be:
 ## Compliance
 
 ScamShield AI follows security best practices including:
+
 - OWASP Top 10 prevention
 - Regular security audits
 - Dependency vulnerability scanning
@@ -79,6 +86,7 @@ We practice responsible disclosure. Please allow time for a patch before public 
 ## Security Headers
 
 The application implements:
+
 ```
 Content-Security-Policy: default-src 'self'
 X-Content-Type-Options: nosniff

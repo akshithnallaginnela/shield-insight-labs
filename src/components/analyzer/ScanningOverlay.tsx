@@ -8,7 +8,13 @@ const STAGES = [
   { label: "Cross-referencing known scam domains…", Icon: Link2 },
 ];
 
-export function ScanningOverlay({ onDone, duration = 2200 }: { onDone: () => void; duration?: number }) {
+export function ScanningOverlay({
+  onDone,
+  duration = 2200,
+}: {
+  onDone: () => void;
+  duration?: number;
+}) {
   const [active, setActive] = useState(0);
   useEffect(() => {
     const step = duration / STAGES.length;
@@ -43,10 +49,16 @@ export function ScanningOverlay({ onDone, duration = 2200 }: { onDone: () => voi
               <li
                 key={s.label}
                 className={`flex items-center gap-3 rounded-lg border px-3 py-2 text-sm transition-all ${
-                  cur ? "border-cyber/40 bg-cyber/5 text-foreground" : done ? "border-safe/30 bg-safe/5 text-muted-foreground" : "border-border/50 text-muted-foreground/60"
+                  cur
+                    ? "border-cyber/40 bg-cyber/5 text-foreground"
+                    : done
+                      ? "border-safe/30 bg-safe/5 text-muted-foreground"
+                      : "border-border/50 text-muted-foreground/60"
                 }`}
               >
-                <Icon className={`h-4 w-4 ${cur ? "text-cyber animate-pulse" : done ? "text-safe" : ""}`} />
+                <Icon
+                  className={`h-4 w-4 ${cur ? "text-cyber animate-pulse" : done ? "text-safe" : ""}`}
+                />
                 <span>{s.label}</span>
               </li>
             );

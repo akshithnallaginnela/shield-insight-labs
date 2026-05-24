@@ -18,7 +18,9 @@ export function BehavioralBreakdown({ anomalies, score }: Props) {
 
   return (
     <Card className="p-5 border-warning/20 bg-warning/5">
-      <h3 className="font-semibold text-sm uppercase tracking-wider mb-3 text-warning">🧭 Behavioral Anomalies</h3>
+      <h3 className="font-semibold text-sm uppercase tracking-wider mb-3 text-warning">
+        🧭 Behavioral Anomalies
+      </h3>
 
       <div className="space-y-3">
         {anomalies.map((anomaly, idx) => {

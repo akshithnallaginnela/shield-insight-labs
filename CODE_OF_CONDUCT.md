@@ -30,6 +30,7 @@ Examples of unacceptable behavior include:
 Community leaders are responsible for clarifying and enforcing our standards of acceptable behavior. They will take appropriate and fair corrective action in response to behavior that violates this Code of Conduct.
 
 Community leaders have the right and responsibility to remove, edit, or reject:
+
 - Comments
 - Commits
 - Code
@@ -42,6 +43,7 @@ Community leaders have the right and responsibility to remove, edit, or reject:
 ## Scope
 
 This Code of Conduct applies to:
+
 - All project spaces (GitHub, issues, discussions, etc.)
 - Official project events and communications
 - Public spaces when representing the project
@@ -59,6 +61,7 @@ Project maintainers are obligated to maintain confidentiality regarding the repo
 ## Consequences
 
 Inappropriate behavior may result in:
+
 1. Warning or temporary ban
 2. Permanent removal from community
 3. Legal action (for serious violations)

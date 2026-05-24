@@ -8,9 +8,17 @@ export const Route = createFileRoute("/feed")({
   head: () => ({
     meta: [
       { title: "Community Threat Feed — ScamShield AI" },
-      { name: "description", content: "Live feed of user-reported scams across WhatsApp, Telegram, SMS, banking and recruiter channels." },
+      {
+        name: "description",
+        content:
+          "Live feed of user-reported scams across WhatsApp, Telegram, SMS, banking and recruiter channels.",
+      },
       { property: "og:title", content: "Community Threat Feed — ScamShield AI" },
-      { property: "og:description", content: "Live feed of user-reported scams across WhatsApp, Telegram, SMS, banking and recruiter channels." },
+      {
+        property: "og:description",
+        content:
+          "Live feed of user-reported scams across WhatsApp, Telegram, SMS, banking and recruiter channels.",
+      },
     ],
   }),
   component: FeedPage,
@@ -20,7 +28,11 @@ const CATS: FeedCategory[] = ["WhatsApp", "Telegram", "Recruiter", "Banking", "I
 
 const SEV_STYLE = {
   high: { dot: "bg-danger shadow-[0_0_12px_var(--danger)]", cls: "text-danger", Icon: ShieldAlert },
-  medium: { dot: "bg-warning shadow-[0_0_12px_var(--warning)]", cls: "text-warning", Icon: AlertTriangle },
+  medium: {
+    dot: "bg-warning shadow-[0_0_12px_var(--warning)]",
+    cls: "text-warning",
+    Icon: AlertTriangle,
+  },
   low: { dot: "bg-muted-foreground", cls: "text-muted-foreground", Icon: Info },
 } as const;
 
@@ -39,9 +51,11 @@ function FeedPage() {
   const all = useMemo(() => [...userReports, ...FEED], [userReports]);
 
   const items = useMemo(() => {
-    return all.filter((i) => (active === "All" ? true : i.category === active)).filter((i) =>
-      q ? (i.title + i.description + i.category).toLowerCase().includes(q.toLowerCase()) : true
-    );
+    return all
+      .filter((i) => (active === "All" ? true : i.category === active))
+      .filter((i) =>
+        q ? (i.title + i.description + i.category).toLowerCase().includes(q.toLowerCase()) : true,
+      );
   }, [q, active, all]);
 
   return (
@@ -51,8 +65,12 @@ function FeedPage() {
           <div className="inline-flex items-center gap-2 rounded-full border border-cyber/30 bg-cyber/10 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-cyber">
             <Radio className="h-3 w-3 animate-pulse" /> Live · {FEED.length} reports
           </div>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Community Threat Feed</h1>
-          <p className="mt-1 text-sm text-muted-foreground">User-reported scams in the wild — updated continuously.</p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
+            Community Threat Feed
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            User-reported scams in the wild — updated continuously.
+          </p>
         </div>
         <div className="relative w-full md:w-72">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -103,11 +121,15 @@ function FeedPage() {
                 <span className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${sev.dot}`} />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-sm font-semibold text-foreground md:text-base">{i.title}</h3>
+                    <h3 className="text-sm font-semibold text-foreground md:text-base">
+                      {i.title}
+                    </h3>
                     <span className="rounded-full border border-border/60 bg-background/40 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
                       {i.category}
                     </span>
-                    <span className={`inline-flex items-center gap-1 text-[10px] uppercase tracking-wider ${sev.cls}`}>
+                    <span
+                      className={`inline-flex items-center gap-1 text-[10px] uppercase tracking-wider ${sev.cls}`}
+                    >
                       <sev.Icon className="h-3 w-3" /> {i.severity}
                     </span>
                   </div>

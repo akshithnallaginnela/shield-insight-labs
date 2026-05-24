@@ -9,12 +9,15 @@ export function analyzeBehavior(text: string): BehavioralAnomaly[] {
   const anomalies: BehavioralAnomaly[] = [];
 
   // 1. GENERIC/IMPERSONAL ADDRESSING
-  const greetingMatch = text.match(/\b(dear sir|dear madam|dear customer|valued customer|hello there|hi there|dear user)\b/i);
+  const greetingMatch = text.match(
+    /\b(dear sir|dear madam|dear customer|valued customer|hello there|hi there|dear user)\b/i,
+  );
   if (greetingMatch) {
     anomalies.push({
       anomaly: "Generic/Impersonal Addressing",
       severity: "medium",
-      explanation: "Uses generic greetings indicating mass targeting, not personalized communication",
+      explanation:
+        "Uses generic greetings indicating mass targeting, not personalized communication",
       evidence: greetingMatch[0],
     });
   }
@@ -63,7 +66,8 @@ export function analyzeBehavior(text: string): BehavioralAnomaly[] {
       anomalies.push({
         anomaly: "Request Escalation Pattern",
         severity: "high",
-        explanation: "Combines multiple types of requests suggesting gradual trust-building for exploitation",
+        explanation:
+          "Combines multiple types of requests suggesting gradual trust-building for exploitation",
         evidence: "Multiple request types detected",
       });
     }
@@ -76,13 +80,17 @@ export function analyzeBehavior(text: string): BehavioralAnomaly[] {
     anomalies.push({
       anomaly: "Inconsistent Information",
       severity: "high",
-      explanation: "Claims to be from bank but asks to contact via WhatsApp - banks don't work this way",
+      explanation:
+        "Claims to be from bank but asks to contact via WhatsApp - banks don't work this way",
       evidence: "Bank claims + WhatsApp request",
     });
   }
 
   // 7. TIMEFRAME INCONSISTENCIES
-  if (/\b(just now|5 mins ago|recently|just saw)\b/i.test(text) && /\b(long time|for years|since|always|never)\b/i.test(text)) {
+  if (
+    /\b(just now|5 mins ago|recently|just saw)\b/i.test(text) &&
+    /\b(long time|for years|since|always|never)\b/i.test(text)
+  ) {
     anomalies.push({
       anomaly: "Timeframe Inconsistency",
       severity: "medium",
@@ -92,7 +100,9 @@ export function analyzeBehavior(text: string): BehavioralAnomaly[] {
   }
 
   // 8. VERIFICATION AVOIDANCE
-  const avoidanceMatch = text.match(/\b(don't ask|no questions|don't worry|don't check|don't verify|just do it|trust me)\b/i);
+  const avoidanceMatch = text.match(
+    /\b(don't ask|no questions|don't worry|don't check|don't verify|just do it|trust me)\b/i,
+  );
   if (avoidanceMatch) {
     anomalies.push({
       anomaly: "Verification Avoidance",

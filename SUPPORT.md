@@ -5,6 +5,7 @@ Thank you for using ScamShield AI! If you need help, we're here for you.
 ## 📚 Documentation
 
 Start with our comprehensive documentation:
+
 - [README.md](README.md) - Project overview and setup guide
 - [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
 - [API Documentation](docs/api.md) - API endpoints (if applicable)
@@ -12,21 +13,26 @@ Start with our comprehensive documentation:
 ## ❓ Frequently Asked Questions
 
 ### How do I use ScamShield AI?
+
 1. Visit the landing page
 2. Paste a suspicious message or upload a screenshot
 3. Click analyze
 4. Review the threat assessment and recommendations
 
 ### Is my data stored?
+
 No. All analysis happens in your browser. We don't store any messages or personal data.
 
 ### Why am I getting this threat level?
+
 Check the "Detected Red Flags" section for specific patterns that triggered the alert. Each flag includes details about why it was flagged.
 
 ### Can I export the analysis?
+
 Yes. Use the Share Card feature to download or share analysis results.
 
 ### How accurate is the detection?
+
 Our AI model is trained on thousands of scam patterns. While highly accurate, no system is 100% accurate. Always use your judgment.
 
 ## 🐛 Report a Bug
@@ -63,6 +69,7 @@ Have an idea? [Open a feature request](https://github.com/yourusername/shield-in
 ## 📧 Direct Contact
 
 For non-technical support:
+
 - Email: Akshith.nallaginnela@gmail.com
 - Subject: Include [SUPPORT] in the subject line
 
@@ -73,11 +80,13 @@ For non-technical support:
 ## 📱 Platform-Specific Help
 
 ### Browser Issues
+
 - **Chrome/Edge**: Clear cache → hard refresh (Ctrl+Shift+R)
 - **Firefox**: Try private browsing mode
 - **Safari**: Check privacy settings
 
 ### Mobile Issues
+
 - Use browser's responsive/reader mode
 - Ensure JavaScript is enabled
 - Try landscape orientation for better UI
@@ -92,6 +101,7 @@ For non-technical support:
 ## 📝 Submitting Feedback
 
 We'd love to hear from you! Share your experience:
+
 - What features do you like?
 - What could be improved?
 - How did it help you?

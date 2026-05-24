@@ -20,9 +20,15 @@ export const Route = createFileRoute("/analyze")({
   head: () => ({
     meta: [
       { title: "Analyzer — ScamShield AI" },
-      { name: "description", content: "Run AI-powered threat analysis on any suspicious message in seconds." },
+      {
+        name: "description",
+        content: "Run AI-powered threat analysis on any suspicious message in seconds.",
+      },
       { property: "og:title", content: "Analyzer — ScamShield AI" },
-      { property: "og:description", content: "Run AI-powered threat analysis on any suspicious message in seconds." },
+      {
+        property: "og:description",
+        content: "Run AI-powered threat analysis on any suspicious message in seconds.",
+      },
     ],
   }),
   component: AnalyzePage,
@@ -48,7 +54,10 @@ function AnalyzePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 pt-10 md:px-6 md:pt-14">
       <div className="mb-6 flex items-center justify-between">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+        >
           <ArrowLeft className="h-3.5 w-3.5" /> Back
         </Link>
         <div className="inline-flex items-center gap-2 rounded-full border border-cyber/30 bg-cyber/10 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-cyber">
@@ -59,8 +68,12 @@ function AnalyzePage() {
       {!pending && !result && (
         <div className="mx-auto max-w-3xl">
           <div className="mb-6 text-center">
-            <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">Run a Threat Analysis</h1>
-            <p className="mt-2 text-sm text-muted-foreground">Paste a message below to begin scanning.</p>
+            <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+              Run a Threat Analysis
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Paste a message below to begin scanning.
+            </p>
           </div>
           <MessageInput />
         </div>
@@ -81,18 +94,24 @@ function AnalyzePage() {
                 <ProbabilityGauge score={result.score} level={result.level} />
                 <ThreatBadge level={result.level} />
                 <p className="text-center text-xs text-muted-foreground">
-                  Based on {result.redFlags.length} detected pattern{result.redFlags.length === 1 ? "" : "s"}.
+                  Based on {result.redFlags.length} detected pattern
+                  {result.redFlags.length === 1 ? "" : "s"}.
                 </p>
               </div>
             </div>
 
             <div>
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Detected Red Flags</h2>
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                Detected Red Flags
+              </h2>
               <RedFlagsList flags={result.redFlags} />
             </div>
 
             <button
-              onClick={() => { setResult(null); useAnalysisStore.getState().setPending(""); }}
+              onClick={() => {
+                setResult(null);
+                useAnalysisStore.getState().setPending("");
+              }}
               className="w-full rounded-lg border border-border/60 bg-background/40 px-4 py-2.5 text-sm transition hover:border-cyber/40 hover:text-foreground"
             >
               Analyze another message
@@ -102,9 +121,18 @@ function AnalyzePage() {
           {/* RIGHT */}
           <div className="space-y-5">
             <ThreatBreakdown result={result} />
-            <PsychologyBreakdown tactics={result.psychologyTactics} score={result.psychologyScore} />
-            <BehavioralBreakdown anomalies={result.behavioralAnomalies} score={result.behaviorScore} />
-            <LinguisticBreakdown markers={result.linguisticMarkers} score={result.linguisticScore} />
+            <PsychologyBreakdown
+              tactics={result.psychologyTactics}
+              score={result.psychologyScore}
+            />
+            <BehavioralBreakdown
+              anomalies={result.behavioralAnomalies}
+              score={result.behaviorScore}
+            />
+            <LinguisticBreakdown
+              markers={result.linguisticMarkers}
+              score={result.linguisticScore}
+            />
             <ScamClassificationCard classification={result.scamClassification} />
             <SafeStepsChecklist steps={result.safeSteps} />
             <ShareCard result={result} />

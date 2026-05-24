@@ -124,7 +124,7 @@ Use this checklist to validate the currently deployed ScamShield AI app from a p
 ## Optional Execution Log Template
 
 | Test ID | Status (Pass/Fail/Blocked) | Evidence (URL/Screenshot) | Severity if Failed | Notes |
-|---|---|---|---|---|
-| A1 |  |  |  |  |
-| A2 |  |  |  |  |
-| ... |  |  |  |  |
+| ------- | -------------------------- | ------------------------- | ------------------ | ----- |
+| A1      |                            |                           |                    |       |
+| A2      |                            |                           |                    |       |
+| ...     |                            |                           |                    |       |

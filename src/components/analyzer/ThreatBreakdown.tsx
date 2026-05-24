@@ -7,7 +7,9 @@ export function ThreatBreakdown({ result }: { result: AnalysisResult }) {
       <section className="glass-card rounded-xl p-5">
         <div className="mb-3 flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-cyber" />
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Annotated Message</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Annotated Message
+          </h3>
         </div>
         <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
           <HighlightedText result={result} />
@@ -17,7 +19,9 @@ export function ThreatBreakdown({ result }: { result: AnalysisResult }) {
       <section className="glass-card rounded-xl p-5">
         <div className="mb-3 flex items-center gap-2">
           <Brain className="h-4 w-4 text-neon" />
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">AI Threat Breakdown</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            AI Threat Breakdown
+          </h3>
         </div>
         <div className="space-y-3 text-sm text-foreground/85">
           {result.breakdown.map((p, i) => (
@@ -30,7 +34,9 @@ export function ThreatBreakdown({ result }: { result: AnalysisResult }) {
         <section className="glass-card rounded-xl p-5">
           <div className="mb-3 flex items-center gap-2">
             <Brain className="h-4 w-4 text-neon" />
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Manipulation Psychology</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Manipulation Psychology
+            </h3>
           </div>
           <ul className="space-y-3">
             {result.manipulationTactics.map((t) => (
@@ -54,7 +60,8 @@ function HighlightedText({ result }: { result: AnalysisResult }) {
   const parts: React.ReactNode[] = [];
   let cursor = 0;
   highlights.forEach((h, i) => {
-    if (h.start > cursor) parts.push(<span key={`p${i}`}>{originalText.slice(cursor, h.start)}</span>);
+    if (h.start > cursor)
+      parts.push(<span key={`p${i}`}>{originalText.slice(cursor, h.start)}</span>);
     parts.push(
       <mark
         key={`h${i}`}
@@ -62,10 +69,11 @@ function HighlightedText({ result }: { result: AnalysisResult }) {
         className="rounded bg-danger/20 px-1 py-0.5 text-danger underline decoration-danger/60 decoration-wavy underline-offset-4"
       >
         {originalText.slice(h.start, h.end)}
-      </mark>
+      </mark>,
     );
     cursor = h.end;
   });
-  if (cursor < originalText.length) parts.push(<span key="tail">{originalText.slice(cursor)}</span>);
+  if (cursor < originalText.length)
+    parts.push(<span key="tail">{originalText.slice(cursor)}</span>);
   return <>{parts}</>;
 }

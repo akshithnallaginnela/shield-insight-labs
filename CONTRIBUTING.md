@@ -17,6 +17,7 @@ By participating in this project, you agree to uphold our [Code of Conduct](CODE
 ## 🚀 Getting Started
 
 ### Fork and Clone
+
 ```bash
 git clone https://github.com/yourusername/shield-insight-labs.git
 cd shield-insight-labs
@@ -24,6 +25,7 @@ npm install
 ```
 
 ### Create a Branch
+
 ```bash
 git checkout -b feature/your-feature-name
 # or
@@ -40,11 +42,13 @@ git checkout -b fix/bug-description
 6. **Open a Pull Request**
 
 ### Running Development Server
+
 ```bash
 npm run dev
 ```
 
 ### Testing & Linting
+
 ```bash
 npm run lint          # Run ESLint
 npm run format        # Format with Prettier
@@ -54,33 +58,37 @@ npm run build         # Build for production
 ## 📝 Coding Standards
 
 ### TypeScript
+
 - Use TypeScript for type safety
 - Avoid `any` types when possible
 - Export types that might be reused
 
 ### Components
+
 - Use functional components with hooks
 - Keep components focused and reusable
 - Add JSDoc comments for complex logic
 - Use descriptive prop names
 
 ### Naming Conventions
+
 ```typescript
 // Components (PascalCase)
-const MyComponent = () => { };
+const MyComponent = () => {};
 
 // Functions (camelCase)
-const analyzeMessage = () => { };
+const analyzeMessage = () => {};
 
 // Constants (UPPER_SNAKE_CASE)
 const MAX_RETRIES = 3;
 
 // Types (PascalCase)
-type AnalysisResult = { };
-interface UserData { }
+type AnalysisResult = {};
+interface UserData {}
 ```
 
 ### File Organization
+
 ```
 src/
 ├── components/        # React components
@@ -104,6 +112,7 @@ src/
    - Screenshots/demos (if applicable)
 
 ### PR Title Format
+
 ```
 feat: Add new feature description
 fix: Fix bug description
@@ -114,23 +123,29 @@ chore: Update dependencies
 ```
 
 ### PR Description Template
+
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Problem Solved
+
 What issue does this address?
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
+
 How to test these changes?
 
 ## Checklist
+
 - [ ] Code follows style guidelines
 - [ ] Self-review completed
 - [ ] Comments added where needed
@@ -156,6 +171,7 @@ How to test these changes?
 ## 🐛 Bug Reports
 
 When reporting bugs, please include:
+
 - Clear, descriptive title
 - Detailed description of the issue
 - Steps to reproduce
@@ -167,6 +183,7 @@ When reporting bugs, please include:
 ## 💡 Feature Requests
 
 When suggesting features, include:
+
 - Clear description of the feature
 - Use case and why it's needed
 - Possible implementation approaches

@@ -1,7 +1,23 @@
-import { analyzeBehavior, calculateBehaviorScore, type BehavioralAnomaly } from "./psychology/behavioralAnalyzer";
-import { analyzeLinguistics, calculateLinguisticScore, type LinguisticMarker } from "./psychology/linguisticAnalyzer";
-import { analyzePsychology, calculatePsychologyScore, type PsychologicalTactic } from "./psychology/manipulationAnalyzer";
-import { classifyScamType, type ScamClassification, type ScamType } from "./scamTypes/scamClassifier";
+import {
+  analyzeBehavior,
+  calculateBehaviorScore,
+  type BehavioralAnomaly,
+} from "./psychology/behavioralAnalyzer";
+import {
+  analyzeLinguistics,
+  calculateLinguisticScore,
+  type LinguisticMarker,
+} from "./psychology/linguisticAnalyzer";
+import {
+  analyzePsychology,
+  calculatePsychologyScore,
+  type PsychologicalTactic,
+} from "./psychology/manipulationAnalyzer";
+import {
+  classifyScamType,
+  type ScamClassification,
+  type ScamType,
+} from "./scamTypes/scamClassifier";
 
 export type ThreatLevel = "safe" | "suspicious" | "critical";
 
@@ -58,67 +74,122 @@ type DetectionPattern = {
 const DETECTION_PATTERNS: DetectionPattern[] = [
   {
     id: "urgency",
-    regex: /\b(urgent|immediately|expires? (in|today)|last chance|act now|within \d+ ?(min|hour|hr))/gi,
-    flag: { label: "Urgency Tactics", description: "Creates artificial time pressure to bypass rational thinking.", severity: "high" },
+    regex:
+      /\b(urgent|immediately|expires? (in|today)|last chance|act now|within \d+ ?(min|hour|hr))/gi,
+    flag: {
+      label: "Urgency Tactics",
+      description: "Creates artificial time pressure to bypass rational thinking.",
+      severity: "high",
+    },
     weight: 22,
-    tactic: { name: "Scarcity & Urgency", explanation: "Scammers create false deadlines so victims act before verifying." },
+    tactic: {
+      name: "Scarcity & Urgency",
+      explanation: "Scammers create false deadlines so victims act before verifying.",
+    },
   },
   {
     id: "credential-request",
     regex: /\b(otp|one[- ]time password|verification code|cvv|pin)\b/gi,
-    flag: { label: "Credential Request", description: "Asks for OTP, PIN or verification codes — legitimate companies never do this.", severity: "high" },
+    flag: {
+      label: "Credential Request",
+      description: "Asks for OTP, PIN or verification codes — legitimate companies never do this.",
+      severity: "high",
+    },
     weight: 28,
-    tactic: { name: "Authority Impersonation", explanation: "Pretends to be a bank/recruiter to extract sensitive credentials." },
+    tactic: {
+      name: "Authority Impersonation",
+      explanation: "Pretends to be a bank/recruiter to extract sensitive credentials.",
+    },
   },
   {
     id: "upfront-payment",
-    regex: /\b(registration fee|processing fee|security deposit|refundable|pay (₹|rs\.?|inr|\$)\s?\d+)/gi,
-    flag: { label: "Upfront Payment Demand", description: "Real employers and banks do not ask for upfront payments.", severity: "high" },
+    regex:
+      /\b(registration fee|processing fee|security deposit|refundable|pay (₹|rs\.?|inr|\$)\s?\d+)/gi,
+    flag: {
+      label: "Upfront Payment Demand",
+      description: "Real employers and banks do not ask for upfront payments.",
+      severity: "high",
+    },
     weight: 26,
   },
   {
     id: "channel-redirect",
     regex: /(t\.me\/|telegram|wa\.me\/|whatsapp(\.com)?\/|\+\d{10,})/gi,
-    flag: { label: "Telegram/WhatsApp Redirect", description: "Moves conversation to encrypted apps to avoid moderation.", severity: "medium" },
+    flag: {
+      label: "Telegram/WhatsApp Redirect",
+      description: "Moves conversation to encrypted apps to avoid moderation.",
+      severity: "medium",
+    },
     weight: 14,
   },
   {
     id: "suspicious-domain",
     regex: /https?:\/\/[^\s]*\.(xyz|top|click|work|monster|cyou|loan|zip|tk|ml)\b/gi,
-    flag: { label: "Suspicious Domain", description: "Link uses a TLD frequently abused by phishing kits.", severity: "high" },
+    flag: {
+      label: "Suspicious Domain",
+      description: "Link uses a TLD frequently abused by phishing kits.",
+      severity: "high",
+    },
     weight: 20,
   },
   {
     id: "shortened-link",
     regex: /\b(bit\.ly|tinyurl|cutt\.ly|rb\.gy|shorturl|t\.co)\b/gi,
-    flag: { label: "Shortened Link", description: "Shortened URLs hide the real destination from victims.", severity: "medium" },
+    flag: {
+      label: "Shortened Link",
+      description: "Shortened URLs hide the real destination from victims.",
+      severity: "medium",
+    },
     weight: 12,
   },
   {
     id: "too-good-to-be-true",
-    regex: /\b(work from home|part[- ]time job|daily (income|earning)|earn (₹|rs\.?|\$)\s?\d{2,}|easy money|no experience)/gi,
-    flag: { label: "Too-Good-To-Be-True Offer", description: "Unrealistic compensation is a hallmark of task & job scams.", severity: "medium" },
+    regex:
+      /\b(work from home|part[- ]time job|daily (income|earning)|earn (₹|rs\.?|\$)\s?\d{2,}|easy money|no experience)/gi,
+    flag: {
+      label: "Too-Good-To-Be-True Offer",
+      description: "Unrealistic compensation is a hallmark of task & job scams.",
+      severity: "medium",
+    },
     weight: 16,
-    tactic: { name: "Greed Exploitation", explanation: "Promises outsized rewards to override critical thinking." },
+    tactic: {
+      name: "Greed Exploitation",
+      explanation: "Promises outsized rewards to override critical thinking.",
+    },
   },
   {
     id: "fake-verification",
     regex: /\b(congratulations|you (have )?won|selected|shortlisted|lucky winner|lottery)\b/gi,
-    flag: { label: "Fake Verification Request", description: "False selection notices used to harvest data.", severity: "medium" },
+    flag: {
+      label: "Fake Verification Request",
+      description: "False selection notices used to harvest data.",
+      severity: "medium",
+    },
     weight: 14,
   },
   {
     id: "generic-greeting",
     regex: /\b(dear (sir|madam|customer|user)|valued customer)\b/gi,
-    flag: { label: "Generic Greeting", description: "Legitimate companies address you by name.", severity: "low" },
+    flag: {
+      label: "Generic Greeting",
+      description: "Legitimate companies address you by name.",
+      severity: "low",
+    },
     weight: 6,
   },
   {
     id: "fear-pressure",
     regex: /\b(account (will be )?(blocked|suspended)|kyc (update|expired)|frozen)\b/gi,
-    flag: { label: "Fear-Based Pressure", description: "Threatens account loss to force a click.", severity: "high" },
+    flag: {
+      label: "Fear-Based Pressure",
+      description: "Threatens account loss to force a click.",
+      severity: "high",
+    },
     weight: 22,
-    tactic: { name: "Loss Aversion", explanation: "Threatens loss of access so the victim acts to 'protect' themselves." },
+    tactic: {
+      name: "Loss Aversion",
+      explanation: "Threatens loss of access so the victim acts to 'protect' themselves.",
+    },
   },
 ];
 
@@ -129,11 +200,15 @@ const EDUCATION_PATTERNS = [
 
 const OPERATIONAL_PATTERNS = {
   apkOrInstall: /\b(apk|install now|download app|enable unknown sources|sideload|update app)\b/gi,
-  paymentIntent: /\b(pay|transfer|deposit|upi|bank|wallet|gpay|phonepe|paytm|refund|fee|charge)\b/gi,
+  paymentIntent:
+    /\b(pay|transfer|deposit|upi|bank|wallet|gpay|phonepe|paytm|refund|fee|charge)\b/gi,
   contactRedirect: /\b(contact me on|move to|continue on|dm on|whatsapp|telegram|call on)\b/gi,
-  authorityCue: /\b(bank|hr|recruiter|support|customer care|courier|delivery|income tax|government|police|amazon|flipkart|microsoft|google|tcs|sbi|hdfc)\b/gi,
-  sensitiveRequest: /\b(otp|one[- ]time password|verification code|cvv|pin|password|aadhar|aadhaar|net banking|card details|account number)\b/gi,
-  callToAction: /\b(click here|open link|tap here|verify now|respond now|send details|share details|apply now)\b/gi,
+  authorityCue:
+    /\b(bank|hr|recruiter|support|customer care|courier|delivery|income tax|government|police|amazon|flipkart|microsoft|google|tcs|sbi|hdfc)\b/gi,
+  sensitiveRequest:
+    /\b(otp|one[- ]time password|verification code|cvv|pin|password|aadhar|aadhaar|net banking|card details|account number)\b/gi,
+  callToAction:
+    /\b(click here|open link|tap here|verify now|respond now|send details|share details|apply now)\b/gi,
 };
 
 export function analyzeMessage(message: string): AnalysisResult {
@@ -154,7 +229,8 @@ export function analyzeMessage(message: string): AnalysisResult {
     100,
   );
 
-  const level: ThreatLevel = combinedScore >= 70 ? "critical" : combinedScore >= 40 ? "suspicious" : "safe";
+  const level: ThreatLevel =
+    combinedScore >= 70 ? "critical" : combinedScore >= 40 ? "suspicious" : "safe";
   const redFlags = mergeRedFlags(baseResult.redFlags, psychologyTactics, behavioralAnomalies);
   const highlights = dedupeHighlights([
     ...baseResult.highlights,
@@ -179,7 +255,10 @@ export function analyzeMessage(message: string): AnalysisResult {
     redFlags,
     highlights,
     breakdown,
-    manipulationTactics: psychologyTactics.map((t) => ({ name: t.tactic, explanation: t.explanation })),
+    manipulationTactics: psychologyTactics.map((t) => ({
+      name: t.tactic,
+      explanation: t.explanation,
+    })),
     safeSteps: generateSafeSteps(level, scamClassification.primaryType, baseResult.redFlags),
     originalText: trimmed,
     psychologyTactics,
@@ -221,7 +300,9 @@ function analyzeMessageOriginal(text: string): LegacyAnalysisResult {
   }
 
   const linkCount = (trimmed.match(/https?:\/\//gi) || []).length;
-  const shortLinkCount = (trimmed.match(/\b(bit\.ly|tinyurl|cutt\.ly|rb\.gy|shorturl|t\.co)\b/gi) || []).length;
+  const shortLinkCount = (
+    trimmed.match(/\b(bit\.ly|tinyurl|cutt\.ly|rb\.gy|shorturl|t\.co)\b/gi) || []
+  ).length;
   const messageLength = normalized.length;
   const hasEducationCue = EDUCATION_PATTERNS.some((pattern) => pattern.test(trimmed));
   const hasInstallCue = OPERATIONAL_PATTERNS.apkOrInstall.test(trimmed);
@@ -321,8 +402,12 @@ function buildSafeSteps(level: ThreatLevel, flags: RedFlag[]): string[] {
   if (flags.some((f) => f.id.replace(/\//g, "-") === "telegram-whatsapp-redirect")) {
     base.push("Refuse to move the conversation to Telegram or WhatsApp.");
   }
-  if (flags.some((f) => f.id === "upfront-payment-demand")) base.push("Never pay a 'registration' or 'security' fee for a job.");
-  if (level !== "safe") base.push("Block the sender and report to your bank/cybercrime portal (cybercrime.gov.in in India).");
+  if (flags.some((f) => f.id === "upfront-payment-demand"))
+    base.push("Never pay a 'registration' or 'security' fee for a job.");
+  if (level !== "safe")
+    base.push(
+      "Block the sender and report to your bank/cybercrime portal (cybercrime.gov.in in India).",
+    );
   return base;
 }
 
@@ -339,7 +424,9 @@ function generateSafeSteps(level: ThreatLevel, scamType: ScamType, flags: RedFla
       break;
     case "investment_crypto":
       steps.push("Avoid any investment promising guaranteed or unusually high returns.");
-      steps.push("Never send crypto to an address shared over chat without independent verification.");
+      steps.push(
+        "Never send crypto to an address shared over chat without independent verification.",
+      );
       break;
     case "tech_support":
       steps.push("Do not grant remote access to your device to unsolicited callers.");
@@ -418,7 +505,11 @@ function generateHighlights(
       const re = new RegExp(escapeRegExp(target), "gi");
       let match: RegExpExecArray | null;
       while ((match = re.exec(text)) !== null) {
-        highlights.push({ start: match.index, end: match.index + match[0].length, reason: tactic.tactic });
+        highlights.push({
+          start: match.index,
+          end: match.index + match[0].length,
+          reason: tactic.tactic,
+        });
         if (re.lastIndex === match.index) re.lastIndex++;
       }
     });
@@ -431,7 +522,11 @@ function generateHighlights(
     const re = new RegExp(escapeRegExp(target), "gi");
     let match: RegExpExecArray | null;
     while ((match = re.exec(text)) !== null) {
-      highlights.push({ start: match.index, end: match.index + match[0].length, reason: anomaly.anomaly });
+      highlights.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        reason: anomaly.anomaly,
+      });
       if (re.lastIndex === match.index) re.lastIndex++;
     }
   });
@@ -475,8 +570,8 @@ function buildEnhancedBreakdown(input: {
     : "Psychological Analysis: No strong manipulation tactics detected.";
 
   const behavioralSummary = behavioralAnomalies.length
-    ? `Behavioral Analysis: ${behavioralAnomalies.length} anomaly${
-        behavioralAnomalies.length === 1 ? "" : "ies"
+    ? `Behavioral Analysis: ${behavioralAnomalies.length} ${
+        behavioralAnomalies.length === 1 ? "anomaly" : "anomalies"
       } detected (score: ${Math.round(behaviorScore)}/100). ${behavioralAnomalies
         .slice(0, 3)
         .map((a) => a.anomaly)
@@ -531,40 +626,73 @@ export interface RecruiterCheck {
   signals: { label: string; ok: boolean; detail: string }[];
 }
 
-const FREE_EMAIL_DOMAINS = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com", "rediffmail.com", "proton.me"];
+const FREE_EMAIL_DOMAINS = [
+  "gmail.com",
+  "yahoo.com",
+  "outlook.com",
+  "hotmail.com",
+  "rediffmail.com",
+  "proton.me",
+];
 
-export function verifyRecruiter(input: { company: string; email: string; linkedin: string }): RecruiterCheck {
+export function verifyRecruiter(input: {
+  company: string;
+  email: string;
+  linkedin: string;
+}): RecruiterCheck {
   const signals: RecruiterCheck["signals"] = [];
   let score = 70;
 
   const emailDomain = input.email.split("@")[1]?.toLowerCase() ?? "";
   const company = input.company.trim().toLowerCase();
-  const linkedinOk = /^https?:\/\/(www\.)?linkedin\.com\/(in|company)\//i.test(input.linkedin.trim());
+  const linkedinOk = /^https?:\/\/(www\.)?linkedin\.com\/(in|company)\//i.test(
+    input.linkedin.trim(),
+  );
 
   if (!emailDomain) {
     signals.push({ label: "Email format", ok: false, detail: "No valid email provided." });
     score -= 25;
   } else if (FREE_EMAIL_DOMAINS.includes(emailDomain)) {
-    signals.push({ label: "Corporate email", ok: false, detail: `Recruiter is using a free email (${emailDomain}) instead of a company domain.` });
+    signals.push({
+      label: "Corporate email",
+      ok: false,
+      detail: `Recruiter is using a free email (${emailDomain}) instead of a company domain.`,
+    });
     score -= 30;
   } else if (company && !emailDomain.includes(company.split(" ")[0])) {
-    signals.push({ label: "Domain matches company", ok: false, detail: `Email domain (${emailDomain}) does not match company name.` });
+    signals.push({
+      label: "Domain matches company",
+      ok: false,
+      detail: `Email domain (${emailDomain}) does not match company name.`,
+    });
     score -= 15;
   } else {
-    signals.push({ label: "Corporate email", ok: true, detail: `Uses a company domain (${emailDomain}).` });
+    signals.push({
+      label: "Corporate email",
+      ok: true,
+      detail: `Uses a company domain (${emailDomain}).`,
+    });
   }
 
   if (/\.(xyz|top|click|work|monster|cyou)$/i.test(emailDomain)) {
-    signals.push({ label: "Domain reputation", ok: false, detail: "Email uses a TLD frequently abused by scammers." });
+    signals.push({
+      label: "Domain reputation",
+      ok: false,
+      detail: "Email uses a TLD frequently abused by scammers.",
+    });
     score -= 25;
   } else if (emailDomain) {
-    signals.push({ label: "Domain reputation", ok: true, detail: "TLD is not on common abuse lists." });
+    signals.push({
+      label: "Domain reputation",
+      ok: true,
+      detail: "TLD is not on common abuse lists.",
+    });
   }
 
   signals.push(
     linkedinOk
       ? { label: "LinkedIn profile", ok: true, detail: "Valid LinkedIn URL format detected." }
-      : { label: "LinkedIn profile", ok: false, detail: "LinkedIn URL is missing or malformed." }
+      : { label: "LinkedIn profile", ok: false, detail: "LinkedIn URL is missing or malformed." },
   );
   if (!linkedinOk) score -= 15;
 

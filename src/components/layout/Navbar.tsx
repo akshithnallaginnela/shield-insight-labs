@@ -20,7 +20,8 @@ export function Navbar() {
             <ShieldCheck className="h-4 w-4 text-background" />
           </span>
           <span className="text-base font-semibold tracking-tight">
-            Scam<span className="text-gradient">Shield</span> <span className="text-muted-foreground text-xs font-mono">AI</span>
+            Scam<span className="text-gradient">Shield</span>{" "}
+            <span className="text-muted-foreground text-xs font-mono">AI</span>
           </span>
         </Link>
         <nav className="hidden items-center gap-1 md:flex">

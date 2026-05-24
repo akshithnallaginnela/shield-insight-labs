@@ -18,7 +18,9 @@ export function PsychologyBreakdown({ tactics, score }: Props) {
 
   return (
     <Card className="p-5 border-cyber/20 bg-gradient-to-br from-cyber/5 to-neon/5">
-      <h3 className="font-semibold text-sm uppercase tracking-wider mb-3 text-cyber">🧠 Psychological Tactics Detected</h3>
+      <h3 className="font-semibold text-sm uppercase tracking-wider mb-3 text-cyber">
+        🧠 Psychological Tactics Detected
+      </h3>
 
       <div className="space-y-3">
         {tactics.map((tactic, idx) => {
@@ -33,7 +35,10 @@ export function PsychologyBreakdown({ tactics, score }: Props) {
                 <p className="text-muted-foreground">{tactic.explanation}</p>
                 <div className="flex gap-1 flex-wrap mt-1">
                   {tactic.evidence.slice(0, 2).map((e, i) => (
-                    <span key={i} className="px-2 py-0.5 bg-background/60 rounded text-[10px] text-muted-foreground">
+                    <span
+                      key={i}
+                      className="px-2 py-0.5 bg-background/60 rounded text-[10px] text-muted-foreground"
+                    >
                       "{e}"
                     </span>
                   ))}

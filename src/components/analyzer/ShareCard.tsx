@@ -102,7 +102,7 @@ export function ShareCard({ result }: { result: AnalysisResult }) {
           <g transform="translate(560, 200)">
             <rect width="580" height="200" rx="16" fill="#ffffff" stroke="#e2e8f0" />
             <foreignObject x="20" y="16" width="540" height="168">
-              <div xmlns="http://www.w3.org/1999/xhtml" style={{ fontFamily: "Manrope, sans-serif", fontSize: "18px", lineHeight: 1.5, color: "#334155" }}>
+              <div style={{ fontFamily: "Manrope, sans-serif", fontSize: "18px", lineHeight: 1.5, color: "#334155" }}>
                 "{preview}"
               </div>
             </foreignObject>

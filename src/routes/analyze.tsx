@@ -99,6 +99,7 @@ function AnalyzePage() {
           <div className="space-y-5">
             <ThreatBreakdown result={result} />
             <SafeStepsChecklist steps={result.safeSteps} />
+            <ShareCard result={result} />
           </div>
         </div>
       )}

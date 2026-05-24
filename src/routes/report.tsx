@@ -107,15 +107,20 @@ function ReportPage() {
             <span className="mb-1.5 block text-xs font-medium text-muted-foreground">Severity</span>
             <div className="flex gap-1.5">
               {SEVS.map((s) => {
-                const tone = s === "high" ? "danger" : s === "medium" ? "warning" : "muted-foreground";
                 const sel = severity === s;
+                const selCls =
+                  s === "high"
+                    ? "border-danger/60 bg-danger/10 text-danger"
+                    : s === "medium"
+                    ? "border-warning/60 bg-warning/10 text-warning"
+                    : "border-muted-foreground/60 bg-muted text-foreground";
                 return (
                   <button
                     type="button"
                     key={s}
                     onClick={() => setSeverity(s)}
                     className={`flex-1 rounded-lg border px-3 py-2 text-xs uppercase tracking-wider transition ${
-                      sel ? `border-${tone}/60 bg-${tone}/10 text-${tone}` : "border-border bg-white/60 text-muted-foreground hover:text-foreground"
+                      sel ? selCls : "border-border bg-white/60 text-muted-foreground hover:text-foreground"
                     }`}
                   >{s}</button>
                 );

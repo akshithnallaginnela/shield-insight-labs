@@ -1,3 +1,8 @@
+import { analyzeBehavior, calculateBehaviorScore, type BehavioralAnomaly } from "./psychology/behavioralAnalyzer";
+import { analyzeLinguistics, calculateLinguisticScore, type LinguisticMarker } from "./psychology/linguisticAnalyzer";
+import { analyzePsychology, calculatePsychologyScore, type PsychologicalTactic } from "./psychology/manipulationAnalyzer";
+import { classifyScamType, type ScamClassification, type ScamType } from "./scamTypes/scamClassifier";
+
 export type ThreatLevel = "safe" | "suspicious" | "critical";
 
 export interface RedFlag {
@@ -22,7 +27,25 @@ export interface AnalysisResult {
   manipulationTactics: { name: string; explanation: string }[];
   safeSteps: string[];
   originalText: string;
+  psychologyTactics: PsychologicalTactic[];
+  behavioralAnomalies: BehavioralAnomaly[];
+  linguisticMarkers: LinguisticMarker[];
+  scamClassification: ScamClassification;
+  psychologyScore: number;
+  behaviorScore: number;
+  linguisticScore: number;
 }
+
+type LegacyAnalysisResult = Omit<
+  AnalysisResult,
+  | "psychologyTactics"
+  | "behavioralAnomalies"
+  | "linguisticMarkers"
+  | "scamClassification"
+  | "psychologyScore"
+  | "behaviorScore"
+  | "linguisticScore"
+>;
 
 type DetectionPattern = {
   id: string;
@@ -113,7 +136,63 @@ const OPERATIONAL_PATTERNS = {
   callToAction: /\b(click here|open link|tap here|verify now|respond now|send details|share details|apply now)\b/gi,
 };
 
-export function analyzeMessage(text: string): AnalysisResult {
+export function analyzeMessage(message: string): AnalysisResult {
+  const trimmed = message.trim();
+  const baseResult = analyzeMessageOriginal(trimmed);
+
+  const psychologyTactics = analyzePsychology(trimmed);
+  const behavioralAnomalies = analyzeBehavior(trimmed);
+  const linguisticMarkers = analyzeLinguistics(trimmed);
+  const scamClassification = classifyScamType(trimmed);
+
+  const psychologyScore = calculatePsychologyScore(psychologyTactics);
+  const behaviorScore = calculateBehaviorScore(behavioralAnomalies);
+  const linguisticScore = calculateLinguisticScore(linguisticMarkers);
+
+  const combinedScore = Math.min(
+    psychologyScore * 0.5 + behaviorScore * 0.3 + linguisticScore * 0.1 + baseResult.score * 0.1,
+    100,
+  );
+
+  const level: ThreatLevel = combinedScore >= 70 ? "critical" : combinedScore >= 40 ? "suspicious" : "safe";
+  const redFlags = mergeRedFlags(baseResult.redFlags, psychologyTactics, behavioralAnomalies);
+  const highlights = dedupeHighlights([
+    ...baseResult.highlights,
+    ...generateHighlights(trimmed, psychologyTactics, behavioralAnomalies),
+  ]);
+
+  const breakdown = buildEnhancedBreakdown({
+    text: trimmed,
+    psychologyTactics,
+    behavioralAnomalies,
+    linguisticMarkers,
+    psychologyScore,
+    behaviorScore,
+    linguisticScore,
+    scamClassification,
+    baseFlags: baseResult.redFlags,
+  });
+
+  return {
+    score: combinedScore,
+    level,
+    redFlags,
+    highlights,
+    breakdown,
+    manipulationTactics: psychologyTactics.map((t) => ({ name: t.tactic, explanation: t.explanation })),
+    safeSteps: generateSafeSteps(level, scamClassification.primaryType, baseResult.redFlags),
+    originalText: trimmed,
+    psychologyTactics,
+    behavioralAnomalies,
+    linguisticMarkers,
+    scamClassification,
+    psychologyScore,
+    behaviorScore,
+    linguisticScore,
+  };
+}
+
+function analyzeMessageOriginal(text: string): LegacyAnalysisResult {
   const trimmed = text.trim();
   const normalized = trimmed.toLowerCase();
   const highlights: Highlight[] = [];
@@ -239,10 +318,210 @@ function buildSafeSteps(level: ThreatLevel, flags: RedFlag[]): string[] {
     "Do not share OTPs, passwords, PINs, or banking details.",
     "Verify the sender independently via the company's official website.",
   ];
-  if (flags.some((f) => f.id === "telegram-whatsapp-redirect")) base.push("Refuse to move the conversation to Telegram or WhatsApp.");
+  if (flags.some((f) => f.id.replace(/\//g, "-") === "telegram-whatsapp-redirect")) {
+    base.push("Refuse to move the conversation to Telegram or WhatsApp.");
+  }
   if (flags.some((f) => f.id === "upfront-payment-demand")) base.push("Never pay a 'registration' or 'security' fee for a job.");
   if (level !== "safe") base.push("Block the sender and report to your bank/cybercrime portal (cybercrime.gov.in in India).");
   return base;
+}
+
+function generateSafeSteps(level: ThreatLevel, scamType: ScamType, flags: RedFlag[]): string[] {
+  const steps = buildSafeSteps(level, flags);
+
+  switch (scamType) {
+    case "job_recruiter":
+      steps.push("Only engage recruiters via the company's official domain or careers page.");
+      break;
+    case "romance":
+      steps.push("Never send money, gift cards, or crypto to someone you have not met in person.");
+      steps.push("Insist on a video call to verify identity before sharing personal details.");
+      break;
+    case "investment_crypto":
+      steps.push("Avoid any investment promising guaranteed or unusually high returns.");
+      steps.push("Never send crypto to an address shared over chat without independent verification.");
+      break;
+    case "tech_support":
+      steps.push("Do not grant remote access to your device to unsolicited callers.");
+      steps.push("Contact support using the official website or app only.");
+      break;
+    case "identity_theft":
+      steps.push("Do not share KYC documents, OTPs, or card details over chat.");
+      steps.push("Verify any identity requests through your bank's official app.");
+      break;
+    case "phishing":
+      steps.push("Type the official website address manually instead of clicking links.");
+      steps.push("Enable multi-factor authentication on your accounts.");
+      break;
+    case "money_transfer":
+      steps.push("Confirm payment requests via a known, trusted channel before sending money.");
+      steps.push("Avoid UPI or bank transfers to unknown recipients.");
+      break;
+    case "lottery_prize":
+      steps.push("Legitimate lotteries never ask for upfront fees or taxes to claim a prize.");
+      break;
+    default:
+      break;
+  }
+
+  return Array.from(new Set(steps));
+}
+
+function mergeRedFlags(
+  baseFlags: RedFlag[],
+  psychologyTactics: PsychologicalTactic[],
+  behavioralAnomalies: BehavioralAnomaly[],
+): RedFlag[] {
+  const merged = new Map<string, RedFlag>();
+  baseFlags.forEach((flag) => merged.set(flag.id, flag));
+
+  psychologyTactics.forEach((tactic) => {
+    const id = toSlug(tactic.tactic);
+    if (!merged.has(id)) {
+      merged.set(id, {
+        id,
+        label: tactic.tactic,
+        description: tactic.explanation,
+        severity: tactic.severity,
+      });
+    }
+  });
+
+  behavioralAnomalies.forEach((anomaly) => {
+    const id = toSlug(anomaly.anomaly);
+    if (!merged.has(id)) {
+      merged.set(id, {
+        id,
+        label: anomaly.anomaly,
+        description: anomaly.explanation,
+        severity: anomaly.severity,
+      });
+    }
+  });
+
+  return Array.from(merged.values());
+}
+
+function generateHighlights(
+  text: string,
+  psychologyTactics: PsychologicalTactic[],
+  behavioralAnomalies: BehavioralAnomaly[],
+): Highlight[] {
+  const highlights: Highlight[] = [];
+  const lower = text.toLowerCase();
+
+  psychologyTactics.forEach((tactic) => {
+    tactic.evidence.forEach((evidence) => {
+      const target = evidence.trim();
+      if (!target) return;
+      if (!lower.includes(target.toLowerCase())) return;
+      const re = new RegExp(escapeRegExp(target), "gi");
+      let match: RegExpExecArray | null;
+      while ((match = re.exec(text)) !== null) {
+        highlights.push({ start: match.index, end: match.index + match[0].length, reason: tactic.tactic });
+        if (re.lastIndex === match.index) re.lastIndex++;
+      }
+    });
+  });
+
+  behavioralAnomalies.forEach((anomaly) => {
+    const target = anomaly.evidence.trim();
+    if (!target) return;
+    if (!lower.includes(target.toLowerCase())) return;
+    const re = new RegExp(escapeRegExp(target), "gi");
+    let match: RegExpExecArray | null;
+    while ((match = re.exec(text)) !== null) {
+      highlights.push({ start: match.index, end: match.index + match[0].length, reason: anomaly.anomaly });
+      if (re.lastIndex === match.index) re.lastIndex++;
+    }
+  });
+
+  return highlights;
+}
+
+function buildEnhancedBreakdown(input: {
+  text: string;
+  psychologyTactics: PsychologicalTactic[];
+  behavioralAnomalies: BehavioralAnomaly[];
+  linguisticMarkers: LinguisticMarker[];
+  psychologyScore: number;
+  behaviorScore: number;
+  linguisticScore: number;
+  scamClassification: ScamClassification;
+  baseFlags: RedFlag[];
+}): string[] {
+  const {
+    text,
+    psychologyTactics,
+    behavioralAnomalies,
+    linguisticMarkers,
+    psychologyScore,
+    behaviorScore,
+    linguisticScore,
+    scamClassification,
+    baseFlags,
+  } = input;
+
+  if (!text) return ["Paste a suspicious message above to start an analysis."];
+
+  const breakdown: string[] = [];
+  const psychologySummary = psychologyTactics.length
+    ? `Psychological Analysis: Detected ${psychologyTactics.length} manipulation tactic${
+        psychologyTactics.length === 1 ? "" : "s"
+      } (score: ${Math.round(psychologyScore)}/100). ${psychologyTactics
+        .slice(0, 3)
+        .map((t) => t.tactic)
+        .join(", ")}.`
+    : "Psychological Analysis: No strong manipulation tactics detected.";
+
+  const behavioralSummary = behavioralAnomalies.length
+    ? `Behavioral Analysis: ${behavioralAnomalies.length} anomaly${
+        behavioralAnomalies.length === 1 ? "" : "ies"
+      } detected (score: ${Math.round(behaviorScore)}/100). ${behavioralAnomalies
+        .slice(0, 3)
+        .map((a) => a.anomaly)
+        .join(", ")}.`
+    : "Behavioral Analysis: No unusual behavior patterns detected.";
+
+  const linguisticSummary = linguisticMarkers.length
+    ? `Linguistic Analysis: ${linguisticMarkers.length} marker${
+        linguisticMarkers.length === 1 ? "" : "s"
+      } found (score: ${Math.round(linguisticScore)}/100). ${linguisticMarkers
+        .slice(0, 3)
+        .map((m) => m.marker)
+        .join(", ")}.`
+    : "Linguistic Analysis: Language appears consistent with legitimate communication.";
+
+  breakdown.push(psychologySummary, behavioralSummary, linguisticSummary);
+
+  const indicatorSummary = scamClassification.indicators.length
+    ? `Indicators: ${scamClassification.indicators.slice(0, 4).join(", ")}.`
+    : "Indicators: No strong scam-type indicators detected.";
+  breakdown.push(
+    `Classification: ${scamClassification.explanation} (Confidence: ${scamClassification.confidence}%). ${indicatorSummary}`,
+  );
+
+  if (baseFlags.length) {
+    breakdown.push(
+      `Additional pattern matches: ${baseFlags
+        .slice(0, 3)
+        .map((f) => f.label)
+        .join(", ")}.`,
+    );
+  }
+
+  return breakdown;
+}
+
+function toSlug(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 // --- Recruiter verifier ---

@@ -6,6 +6,10 @@ import { ProbabilityGauge } from "@/components/analyzer/ProbabilityGauge";
 import { ThreatBadge } from "@/components/ui/ThreatBadge";
 import { RedFlagsList } from "@/components/analyzer/RedFlagsList";
 import { ThreatBreakdown } from "@/components/analyzer/ThreatBreakdown";
+import { PsychologyBreakdown } from "@/components/analyzer/PsychologyBreakdown";
+import { BehavioralBreakdown } from "@/components/analyzer/BehavioralBreakdown";
+import { LinguisticBreakdown } from "@/components/analyzer/LinguisticBreakdown";
+import { ScamClassificationCard } from "@/components/analyzer/ScamClassificationCard";
 import { SafeStepsChecklist } from "@/components/analyzer/SafeStepsChecklist";
 import { ShareCard } from "@/components/analyzer/ShareCard";
 import { useAnalysisStore } from "@/stores/analysisStore";
@@ -98,6 +102,10 @@ function AnalyzePage() {
           {/* RIGHT */}
           <div className="space-y-5">
             <ThreatBreakdown result={result} />
+            <PsychologyBreakdown tactics={result.psychologyTactics} score={result.psychologyScore} />
+            <BehavioralBreakdown anomalies={result.behavioralAnomalies} score={result.behaviorScore} />
+            <LinguisticBreakdown markers={result.linguisticMarkers} score={result.linguisticScore} />
+            <ScamClassificationCard classification={result.scamClassification} />
             <SafeStepsChecklist steps={result.safeSteps} />
             <ShareCard result={result} />
           </div>

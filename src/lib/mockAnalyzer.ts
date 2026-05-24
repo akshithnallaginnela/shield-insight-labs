@@ -24,61 +24,74 @@ export interface AnalysisResult {
   originalText: string;
 }
 
-const PATTERNS: {
+type DetectionPattern = {
+  id: string;
   regex: RegExp;
   flag: Omit<RedFlag, "id">;
   weight: number;
   tactic?: { name: string; explanation: string };
-}[] = [
+};
+
+const DETECTION_PATTERNS: DetectionPattern[] = [
   {
+    id: "urgency",
     regex: /\b(urgent|immediately|expires? (in|today)|last chance|act now|within \d+ ?(min|hour|hr))/gi,
     flag: { label: "Urgency Tactics", description: "Creates artificial time pressure to bypass rational thinking.", severity: "high" },
     weight: 22,
     tactic: { name: "Scarcity & Urgency", explanation: "Scammers create false deadlines so victims act before verifying." },
   },
   {
+    id: "credential-request",
     regex: /\b(otp|one[- ]time password|verification code|cvv|pin)\b/gi,
     flag: { label: "Credential Request", description: "Asks for OTP, PIN or verification codes — legitimate companies never do this.", severity: "high" },
     weight: 28,
     tactic: { name: "Authority Impersonation", explanation: "Pretends to be a bank/recruiter to extract sensitive credentials." },
   },
   {
+    id: "upfront-payment",
     regex: /\b(registration fee|processing fee|security deposit|refundable|pay (₹|rs\.?|inr|\$)\s?\d+)/gi,
     flag: { label: "Upfront Payment Demand", description: "Real employers and banks do not ask for upfront payments.", severity: "high" },
     weight: 26,
   },
   {
+    id: "channel-redirect",
     regex: /(t\.me\/|telegram|wa\.me\/|whatsapp(\.com)?\/|\+\d{10,})/gi,
     flag: { label: "Telegram/WhatsApp Redirect", description: "Moves conversation to encrypted apps to avoid moderation.", severity: "medium" },
     weight: 14,
   },
   {
+    id: "suspicious-domain",
     regex: /https?:\/\/[^\s]*\.(xyz|top|click|work|monster|cyou|loan|zip|tk|ml)\b/gi,
     flag: { label: "Suspicious Domain", description: "Link uses a TLD frequently abused by phishing kits.", severity: "high" },
     weight: 20,
   },
   {
+    id: "shortened-link",
     regex: /\b(bit\.ly|tinyurl|cutt\.ly|rb\.gy|shorturl|t\.co)\b/gi,
     flag: { label: "Shortened Link", description: "Shortened URLs hide the real destination from victims.", severity: "medium" },
     weight: 12,
   },
   {
+    id: "too-good-to-be-true",
     regex: /\b(work from home|part[- ]time job|daily (income|earning)|earn (₹|rs\.?|\$)\s?\d{2,}|easy money|no experience)/gi,
     flag: { label: "Too-Good-To-Be-True Offer", description: "Unrealistic compensation is a hallmark of task & job scams.", severity: "medium" },
     weight: 16,
     tactic: { name: "Greed Exploitation", explanation: "Promises outsized rewards to override critical thinking." },
   },
   {
+    id: "fake-verification",
     regex: /\b(congratulations|you (have )?won|selected|shortlisted|lucky winner|lottery)\b/gi,
     flag: { label: "Fake Verification Request", description: "False selection notices used to harvest data.", severity: "medium" },
     weight: 14,
   },
   {
+    id: "generic-greeting",
     regex: /\b(dear (sir|madam|customer|user)|valued customer)\b/gi,
     flag: { label: "Generic Greeting", description: "Legitimate companies address you by name.", severity: "low" },
     weight: 6,
   },
   {
+    id: "fear-pressure",
     regex: /\b(account (will be )?(blocked|suspended)|kyc (update|expired)|frozen)\b/gi,
     flag: { label: "Fear-Based Pressure", description: "Threatens account loss to force a click.", severity: "high" },
     weight: 22,
@@ -86,14 +99,30 @@ const PATTERNS: {
   },
 ];
 
+const EDUCATION_PATTERNS = [
+  /\b(never share|do not share|don'?t share|avoid scams|fraud alert|scam alert|security tip|how to spot|awareness)\b/gi,
+  /\b(report|block|verify|confirm) (the )?sender\b/gi,
+];
+
+const OPERATIONAL_PATTERNS = {
+  apkOrInstall: /\b(apk|install now|download app|enable unknown sources|sideload|update app)\b/gi,
+  paymentIntent: /\b(pay|transfer|deposit|upi|bank|wallet|gpay|phonepe|paytm|refund|fee|charge)\b/gi,
+  contactRedirect: /\b(contact me on|move to|continue on|dm on|whatsapp|telegram|call on)\b/gi,
+  authorityCue: /\b(bank|hr|recruiter|support|customer care|courier|delivery|income tax|government|police|amazon|flipkart|microsoft|google|tcs|sbi|hdfc)\b/gi,
+  sensitiveRequest: /\b(otp|one[- ]time password|verification code|cvv|pin|password|aadhar|aadhaar|net banking|card details|account number)\b/gi,
+  callToAction: /\b(click here|open link|tap here|verify now|respond now|send details|share details|apply now)\b/gi,
+};
+
 export function analyzeMessage(text: string): AnalysisResult {
   const trimmed = text.trim();
+  const normalized = trimmed.toLowerCase();
   const highlights: Highlight[] = [];
   const redFlagsMap = new Map<string, RedFlag>();
   const tactics = new Map<string, { name: string; explanation: string }>();
   let score = 0;
+  let strongSignals = 0;
 
-  for (const p of PATTERNS) {
+  for (const p of DETECTION_PATTERNS) {
     let m: RegExpExecArray | null;
     const re = new RegExp(p.regex.source, p.regex.flags);
     let matched = false;
@@ -105,20 +134,41 @@ export function analyzeMessage(text: string): AnalysisResult {
     if (matched) {
       const id = p.flag.label.toLowerCase().replace(/\s+/g, "-");
       redFlagsMap.set(id, { id, ...p.flag });
-      score += p.weight;
+      const matchBoost = p.weight + Math.min(6, Math.max(0, Math.floor(trimmed.length / 120)));
+      score += matchBoost;
+      if (p.flag.severity === "high") strongSignals += 1;
       if (p.tactic) tactics.set(p.tactic.name, p.tactic);
     }
   }
 
-  // Length / link density boost
-  const linkCount = (trimmed.match(/https?:\/\//g) || []).length;
+  const linkCount = (trimmed.match(/https?:\/\//gi) || []).length;
+  const shortLinkCount = (trimmed.match(/\b(bit\.ly|tinyurl|cutt\.ly|rb\.gy|shorturl|t\.co)\b/gi) || []).length;
+  const messageLength = normalized.length;
+  const hasEducationCue = EDUCATION_PATTERNS.some((pattern) => pattern.test(trimmed));
+  const hasInstallCue = OPERATIONAL_PATTERNS.apkOrInstall.test(trimmed);
+  const hasPaymentCue = OPERATIONAL_PATTERNS.paymentIntent.test(trimmed);
+  const hasRedirectCue = OPERATIONAL_PATTERNS.contactRedirect.test(trimmed);
+  const hasAuthorityCue = OPERATIONAL_PATTERNS.authorityCue.test(trimmed);
+  const hasSensitiveCue = OPERATIONAL_PATTERNS.sensitiveRequest.test(trimmed);
+  const hasCallToAction = OPERATIONAL_PATTERNS.callToAction.test(trimmed);
+
   if (linkCount >= 2) score += 6;
+  if (shortLinkCount > 0) score += 4;
   if (/[!]{2,}/.test(trimmed) || /[A-Z]{6,}/.test(trimmed)) score += 4;
+  if (hasInstallCue) score += 14;
+  if (hasPaymentCue && hasCallToAction) score += 10;
+  if (hasRedirectCue && (hasSensitiveCue || hasPaymentCue)) score += 12;
+  if (hasAuthorityCue && (hasSensitiveCue || hasPaymentCue || linkCount > 0)) score += 10;
+  if (messageLength > 280 && (linkCount > 0 || hasCallToAction)) score += 4;
+  if (hasEducationCue && score > 0) score = Math.max(0, score - 18);
+
+  if (strongSignals >= 2) score += 8;
+  if (strongSignals >= 3) score += 10;
 
   score = Math.max(0, Math.min(100, score));
   if (!trimmed) score = 0;
 
-  const level: ThreatLevel = score >= 65 ? "critical" : score >= 30 ? "suspicious" : "safe";
+  const level: ThreatLevel = score >= 70 ? "critical" : score >= 35 ? "suspicious" : "safe";
 
   const redFlags = Array.from(redFlagsMap.values());
   const manipulationTactics = Array.from(tactics.values());
@@ -148,13 +198,13 @@ function buildBreakdown(level: ThreatLevel, flags: RedFlag[], text: string): str
   if (!text) return ["Paste a suspicious message above to start an analysis."];
   if (level === "safe" && flags.length === 0) {
     return [
-      "Our models did not detect strong scam indicators in this message.",
+      "The analyzer did not detect strong scam indicators in this message.",
       "Stay cautious — context matters. Verify the sender independently before acting on any request.",
     ];
   }
   const intro =
     level === "critical"
-      ? "This message exhibits multiple high-risk patterns consistent with active phishing and fraud campaigns."
+      ? "This message combines multiple high-risk patterns that are frequently seen in active phishing and fraud campaigns."
       : "This message contains patterns commonly used in social engineering attempts.";
 
   return [

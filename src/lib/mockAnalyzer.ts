@@ -376,7 +376,7 @@ function analyzeMessageOriginal(text: string): LegacyAnalysisResult {
 
   // Romance scams often combine emotional appeal with payment requests
   if (redFlagsMap.has("romance-fraud") && hasPaymentCue) {
-    score += 15;
+    score += 25;
   }
 
   score = Math.max(0, Math.min(100, score));

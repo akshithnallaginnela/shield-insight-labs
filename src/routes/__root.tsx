@@ -19,7 +19,7 @@ function NotFoundComponent() {
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-cyber">404 · signal lost</p>
         <h1 className="mt-3 text-2xl font-semibold">This page is off the grid</h1>
         <p className="mt-2 text-sm text-muted-foreground">The page you're looking for doesn't exist.</p>
-        <a href="/" className="mt-5 inline-block rounded-lg bg-gradient-to-r from-cyber to-neon px-4 py-2 text-sm font-semibold text-background">Back to safety</a>
+        <a href="/" className="mt-5 inline-block rounded-lg bg-gradient-to-r from-cyber to-neon px-4 py-2 text-sm font-semibold text-white">Back to safety</a>
       </div>
     </div>
   );

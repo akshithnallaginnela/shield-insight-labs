@@ -151,6 +151,16 @@ export function analyzeMessage(text: string): AnalysisResult {
   const hasAuthorityCue = OPERATIONAL_PATTERNS.authorityCue.test(trimmed);
   const hasSensitiveCue = OPERATIONAL_PATTERNS.sensitiveRequest.test(trimmed);
   const hasCallToAction = OPERATIONAL_PATTERNS.callToAction.test(trimmed);
+  const warningOnlyEducationCue =
+    hasEducationCue &&
+    redFlagsMap.size === 1 &&
+    redFlagsMap.has("credential-request") &&
+    !hasCallToAction &&
+    !hasPaymentCue &&
+    !hasRedirectCue &&
+    !hasAuthorityCue &&
+    !hasInstallCue &&
+    linkCount === 0;
 
   if (linkCount >= 2) score += 6;
   if (shortLinkCount > 0) score += 4;
@@ -160,7 +170,11 @@ export function analyzeMessage(text: string): AnalysisResult {
   if (hasRedirectCue && (hasSensitiveCue || hasPaymentCue)) score += 12;
   if (hasAuthorityCue && (hasSensitiveCue || hasPaymentCue || linkCount > 0)) score += 10;
   if (messageLength > 280 && (linkCount > 0 || hasCallToAction)) score += 4;
-  if (hasEducationCue && score > 0) score = Math.max(0, score - 18);
+  if (warningOnlyEducationCue) {
+    score = 0;
+  } else if (hasEducationCue && score > 0) {
+    score = Math.max(0, score - 18);
+  }
 
   if (strongSignals >= 2) score += 8;
   if (strongSignals >= 3) score += 10;
@@ -168,7 +182,7 @@ export function analyzeMessage(text: string): AnalysisResult {
   score = Math.max(0, Math.min(100, score));
   if (!trimmed) score = 0;
 
-  const level: ThreatLevel = score >= 70 ? "critical" : score >= 35 ? "suspicious" : "safe";
+  const level: ThreatLevel = score >= 70 ? "critical" : score >= 30 ? "suspicious" : "safe";
 
   const redFlags = Array.from(redFlagsMap.values());
   const manipulationTactics = Array.from(tactics.values());

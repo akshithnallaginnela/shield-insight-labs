@@ -88,6 +88,26 @@ const DETECTION_PATTERNS: DetectionPattern[] = [
     },
   },
   {
+    id: "investment-opportunity",
+    regex: /\b(invest(ment)?|double your money|guaranteed returns|high return|high roi|earn (?:\$|₹)\d{2,}|profit opportunity|investment opportunity|limited-time investment)\b/gi,
+    flag: { label: "Investment Offer", description: "Promotes unrealistic returns or pushes immediate investment.", severity: "high" },
+    weight: 30,
+    tactic: { name: "Greed Exploitation", explanation: "Promises outsized returns to bypass rational evaluation." },
+  },
+  {
+    id: "tech-support-scam",
+    regex: /\b(infected|virus|malware|license has expired|call support|technical support|remote support|teamviewer|anydesk|install remote|fix your (pc|computer)|update now to fix)\b/gi,
+    flag: { label: "Tech Support Scam", description: "Fake tech support asking for calls, installing remote software, or payments.", severity: "high" },
+    weight: 28,
+    tactic: { name: "Technical Fear", explanation: "Uses fear of device or account compromise to trick victims into giving access or payment." },
+  },
+  {
+    id: "romance-fraud",
+    regex: /\b(i (?:have )?(?:strong )?feelings|i love you|need help|send me money|urgent travel costs|help me with money|cannot access my funds)\b/gi,
+    flag: { label: "Romance / Personal Appeal", description: "Emotional appeal asking for money or favors.", severity: "high" },
+    weight: 26,
+  },
+  {
     id: "credential-request",
     regex: /\b(otp|one[- ]time password|verification code|cvv|pin)\b/gi,
     flag: {
@@ -224,8 +244,11 @@ export function analyzeMessage(message: string): AnalysisResult {
   const behaviorScore = calculateBehaviorScore(behavioralAnomalies);
   const linguisticScore = calculateLinguisticScore(linguisticMarkers);
 
+  // Give stronger weight to the base rule-based result while retaining
+  // psychological and behavioral signals so the heuristics drive initial
+  // classification during this v2.0 prototype.
   const combinedScore = Math.min(
-    psychologyScore * 0.5 + behaviorScore * 0.3 + linguisticScore * 0.1 + baseResult.score * 0.1,
+    baseResult.score * 0.6 + psychologyScore * 0.2 + behaviorScore * 0.1 + linguisticScore * 0.1,
     100,
   );
 
@@ -290,7 +313,7 @@ function analyzeMessageOriginal(text: string): LegacyAnalysisResult {
       if (re.lastIndex === m.index) re.lastIndex++;
     }
     if (matched) {
-      const id = p.flag.label.toLowerCase().replace(/\s+/g, "-");
+      const id = p.id ?? p.flag.label.toLowerCase().replace(/\s+/g, "-");
       redFlagsMap.set(id, { id, ...p.flag });
       const matchBoost = p.weight + Math.min(6, Math.max(0, Math.floor(trimmed.length / 120)));
       score += matchBoost;

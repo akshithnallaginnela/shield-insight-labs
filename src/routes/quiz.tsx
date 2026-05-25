@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { Sparkles, Check, X, Award, RotateCcw } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { Sparkles, Check, X, Award, RotateCcw, Download, ShieldCheck } from "lucide-react";
+
 
 export const Route = createFileRoute("/quiz")({
   head: () => ({

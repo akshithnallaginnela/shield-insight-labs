@@ -41,10 +41,21 @@ export const Route = createFileRoute("/analyze")({
 });
 
 function AnalyzePage() {
+  const search = Route.useSearch();
   const pending = useAnalysisStore((s) => s.pendingMessage);
   const result = useAnalysisStore((s) => s.result);
   const setResult = useAnalysisStore((s) => s.setResult);
+  const setPending = useAnalysisStore((s) => s.setPending);
   const [scanning, setScanning] = useState(false);
+
+  // Auto-analyze from URL ?msg=...
+  useEffect(() => {
+    if (search.msg && !result && !scanning) {
+      const decoded = decodeURIComponent(search.msg);
+      setPending(decoded);
+      setScanning(true);
+    }
+  }, [search.msg]);
 
   useEffect(() => {
     if (pending && !result) {

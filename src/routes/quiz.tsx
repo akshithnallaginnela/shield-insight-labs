@@ -94,7 +94,12 @@ const QUESTIONS: Q[] = [
 function QuizPage() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<boolean[]>([]); // correct?
+  const [picks, setPicks] = useState<boolean[]>([]); // what user picked
   const [selected, setSelected] = useState<null | boolean>(null);
+  const [recipientName, setRecipientName] = useState("");
+  const [downloading, setDownloading] = useState(false);
+  const certRef = useRef<SVGSVGElement>(null);
+
 
   const done = step >= QUESTIONS.length;
   const score = answers.filter(Boolean).length;

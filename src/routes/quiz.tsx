@@ -121,6 +121,7 @@ function QuizPage() {
   const next = () => {
     if (!current || selected === null) return;
     setAnswers((a) => [...a, selected === current.isScam]);
+    setPicks((p) => [...p, selected]);
     setSelected(null);
     setStep((s) => s + 1);
   };
@@ -128,8 +129,57 @@ function QuizPage() {
   const reset = () => {
     setStep(0);
     setAnswers([]);
+    setPicks([]);
     setSelected(null);
   };
+
+  const issuedOn = useMemo(
+    () =>
+      new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    [done],
+  );
+  const certId = useMemo(
+    () => `SSAI-${Math.random().toString(36).slice(2, 8).toUpperCase()}-${score}${QUESTIONS.length}`,
+    [done],
+  );
+  const displayName = recipientName.trim() || "Cybersecurity Trainee";
+
+  const downloadCertificate = async () => {
+    if (!certRef.current) return;
+    setDownloading(true);
+    try {
+      const svg = certRef.current;
+      const xml = new XMLSerializer().serializeToString(svg);
+      const svg64 = btoa(unescape(encodeURIComponent(xml)));
+      const dataUrl = `data:image/svg+xml;base64,${svg64}`;
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error("img load"));
+        img.src = dataUrl;
+      });
+      const canvas = document.createElement("canvas");
+      canvas.width = 1600;
+      canvas.height = 1100;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("canvas ctx");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const link = document.createElement("a");
+      link.download = `scamshield-certificate-${certId}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } finally {
+      setDownloading(false);
+    }
+  };
+
 
   return (
     <div className="mx-auto max-w-3xl px-4 pt-10 md:px-6 md:pt-14">

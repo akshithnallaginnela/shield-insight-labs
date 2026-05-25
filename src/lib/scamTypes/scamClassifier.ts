@@ -27,6 +27,7 @@ export function classifyScamType(text: string): ScamClassification {
     money_transfer: 0,
     lottery_prize: 0,
     ai_bot_scam: 0,
+    romance: 0,
     unknown: 0,
   };
   const indicators: string[] = [];

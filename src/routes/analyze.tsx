@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { z } from "zod";
 import { MessageInput } from "@/components/analyzer/MessageInput";
 import { ScanningOverlay } from "@/components/analyzer/ScanningOverlay";
 import { ProbabilityGauge } from "@/components/analyzer/ProbabilityGauge";

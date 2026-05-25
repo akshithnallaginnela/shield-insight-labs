@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { z } from "zod";
 import { MessageInput } from "@/components/analyzer/MessageInput";
 import { ScanningOverlay } from "@/components/analyzer/ScanningOverlay";
 import { ProbabilityGauge } from "@/components/analyzer/ProbabilityGauge";
@@ -16,7 +17,12 @@ import { useAnalysisStore } from "@/stores/analysisStore";
 import { analyzeMessage } from "@/lib/mockAnalyzer";
 import { ArrowLeft, Sparkles } from "lucide-react";
 
+const searchSchema = z.object({
+  msg: z.string().optional(),
+});
+
 export const Route = createFileRoute("/analyze")({
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
       { title: "Analyzer — ScamShield AI" },
@@ -35,10 +41,22 @@ export const Route = createFileRoute("/analyze")({
 });
 
 function AnalyzePage() {
+  const navigate = useNavigate();
+  const search = Route.useSearch();
   const pending = useAnalysisStore((s) => s.pendingMessage);
   const result = useAnalysisStore((s) => s.result);
   const setResult = useAnalysisStore((s) => s.setResult);
+  const setPending = useAnalysisStore((s) => s.setPending);
   const [scanning, setScanning] = useState(false);
+
+  // Auto-analyze from URL ?msg=...
+  useEffect(() => {
+    if (search.msg && !result && !scanning) {
+      const decoded = decodeURIComponent(search.msg);
+      setPending(decoded);
+      setScanning(true);
+    }
+  }, [search.msg]);
 
   useEffect(() => {
     if (pending && !result) {
@@ -111,6 +129,7 @@ function AnalyzePage() {
               onClick={() => {
                 setResult(null);
                 useAnalysisStore.getState().setPending("");
+                navigate({ to: "/analyze", search: {} });
               }}
               className="w-full rounded-lg border border-border/60 bg-background/40 px-4 py-2.5 text-sm transition hover:border-cyber/40 hover:text-foreground"
             >

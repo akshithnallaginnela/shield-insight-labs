@@ -7,6 +7,7 @@ export type ScamType =
   | "money_transfer"
   | "lottery_prize"
   | "ai_bot_scam"
+  | "romance"
   | "unknown";
 
 export interface ScamClassification {

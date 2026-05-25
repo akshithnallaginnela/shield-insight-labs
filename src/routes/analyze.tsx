@@ -17,7 +17,12 @@ import { useAnalysisStore } from "@/stores/analysisStore";
 import { analyzeMessage } from "@/lib/mockAnalyzer";
 import { ArrowLeft, Sparkles } from "lucide-react";
 
+const searchSchema = z.object({
+  msg: z.string().optional(),
+});
+
 export const Route = createFileRoute("/analyze")({
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
       { title: "Analyzer — ScamShield AI" },

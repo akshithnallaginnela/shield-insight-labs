@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import type { AnalysisResult } from "@/lib/mockAnalyzer";
-import { Share2, Download, Check } from "lucide-react";
+import { Share2, Download, Check, Link2, Pencil, Quote } from "lucide-react";
 
 const LEVEL_COLOR = {
   safe: { bg: "#10b981", label: "Looks Safe" },
@@ -8,10 +8,54 @@ const LEVEL_COLOR = {
   critical: { bg: "#ef4444", label: "Critical Danger" },
 } as const;
 
+const SEV_DOT = {
+  high: "#ef4444",
+  medium: "#f59e0b",
+  low: "#64748b",
+} as const;
+
+function buildSourceUrl(text: string) {
+  const base = typeof window !== "undefined" ? window.location.origin : "https://shield-insight-labs.lovable.app";
+  return `${base}/analyze?msg=${encodeURIComponent(text)}`;
+}
+
+function getSuspiciousSentence(text: string): string {
+  const sentences = text.split(/(?<=[.!?])\s+/);
+  const triggerWords = /urgent|immediately|expires?|last chance|act now|otp|password|pin|cvv|click here|verify now|won|selected|congratulations|limited time|exclusive|invest|double your money|guaranteed|high return|fee|deposit|pay now|transfer|bank account|install|download|remote access|call support/i;
+  for (const s of sentences) {
+    if (triggerWords.test(s) && s.length > 20) return s.trim();
+  }
+  return sentences[ 0 ]?.trim() || text;
+}
+
+type ExcerptMode = "auto" | "suspicious" | "custom";
+
 export function ShareCard({ result }: { result: AnalysisResult }) {
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [excerptMode, setExcerptMode] = useState<ExcerptMode>("auto");
+  const [customExcerpt, setCustomExcerpt] = useState("");
   const svgRef = useRef<SVGSVGElement>(null);
   const tone = LEVEL_COLOR[result.level];
+
+  const sourceUrl = useMemo(() => buildSourceUrl(result.originalText), [result.originalText]);
+
+  const preview = useMemo(() => {
+    if (excerptMode === "custom" && customExcerpt.trim()) {
+      const t = customExcerpt.trim();
+      return t.length > 200 ? t.slice(0, 200) + "…" : t;
+    }
+    if (excerptMode === "suspicious") {
+      const s = getSuspiciousSentence(result.originalText);
+      return s.length > 200 ? s.slice(0, 200) + "…" : s;
+    }
+    // auto
+    const t = result.originalText;
+    return t.length > 140 ? t.slice(0, 140) + "…" : t;
+  }, [excerptMode, customExcerpt, result.originalText]);
+
+  const visibleFlags = result.redFlags.slice(1, 4);
+  const topFlag = result.redFlags[0];
 
   const download = async () => {
     const svg = svgRef.current;
@@ -41,25 +85,25 @@ export function ShareCard({ result }: { result: AnalysisResult }) {
   };
 
   const copyText = async () => {
-    const text = `⚠️ ScamShield AI flagged this message as ${tone.label.toUpperCase()} (${result.score}% scam probability).\n\nTop red flags: ${
-      result.redFlags
-        .slice(0, 3)
-        .map((f) => f.label)
-        .join(", ") || "—"
-    }\n\nVerify before you trust: scamshield.ai`;
+    const text = `⚠️ ScamShield AI flagged this message as ${tone.label.toUpperCase()} (${Math.round(result.score)}% scam probability).
+
+"${preview}"
+
+Detected red flags:\n${result.redFlags.map((f) => `• ${f.label} (${f.severity})`).join("\n") || "—"}\n\nView full analysis: ${sourceUrl}`;
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
 
-  const preview =
-    result.originalText.length > 140
-      ? result.originalText.slice(0, 140) + "…"
-      : result.originalText;
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(sourceUrl);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 1800);
+  };
 
   return (
     <section className="glass-card rounded-xl p-5">
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           Share this warning
         </h3>
@@ -84,6 +128,66 @@ export function ShareCard({ result }: { result: AnalysisResult }) {
         </div>
       </div>
 
+      {/* Excerpt chooser */}
+      <div className="mb-4 rounded-xl border border-border bg-background/40 p-3">
+        <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+          <Quote className="h-3 w-3" /> Choose message excerpt
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {([
+            { key: "auto", label: "Auto" },
+            { key: "suspicious", label: "Most suspicious" },
+            { key: "custom", label: "Custom" },
+          ] as { key: ExcerptMode; label: string }[]).map((m) => (
+            <button
+              key={m.key}
+              onClick={() => setExcerptMode(m.key)}
+              className={`rounded-full px-3 py-1 text-xs transition ${
+                excerptMode === m.key
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-border bg-white/60 text-muted-foreground hover:bg-white"
+              }`}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+        {excerptMode === "custom" && (
+          <textarea
+            value={customExcerpt}
+            onChange={(e) => setCustomExcerpt(e.target.value)}
+            placeholder="Paste the excerpt you want to highlight…"
+            maxLength={220}
+            className="mt-2 w-full rounded-lg border border-border bg-white/70 px-3 py-2 text-xs text-foreground outline-none ring-ring transition focus:ring-2"
+            rows={3}
+          />
+        )}
+        <p className="mt-2 text-[11px] text-muted-foreground">
+          Preview: “{preview}”
+        </p>
+      </div>
+
+      {/* Source link */}
+      <div className="mb-4 flex items-center gap-2 rounded-xl border border-border bg-background/40 p-3">
+        <Link2 className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+        <a
+          href={sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="min-w-0 flex-1 truncate text-xs text-primary underline underline-offset-2 hover:text-primary/80"
+          title={sourceUrl}
+        >
+          {sourceUrl}
+        </a>
+        <button
+          onClick={copyLink}
+          className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-white/70 px-2 py-1 text-[11px] hover:bg-white"
+        >
+          {linkCopied ? <Check className="h-3 w-3 text-safe" /> : <Pencil className="h-3 w-3" />}
+          {linkCopied ? "Copied" : "Copy link"}
+        </button>
+      </div>
+
       <div className="overflow-hidden rounded-xl border border-border">
         <svg
           ref={svgRef}
@@ -106,7 +210,7 @@ export function ShareCard({ result }: { result: AnalysisResult }) {
           <circle cx="1100" cy="560" r="220" fill="#8b5cf6" opacity="0.10" />
 
           {/* Brand */}
-          <g transform="translate(60, 60)">
+          <g transform="translate(60, 50)">
             <rect width="44" height="44" rx="10" fill="url(#brand)" />
             <text
               x="56"
@@ -121,8 +225,8 @@ export function ShareCard({ result }: { result: AnalysisResult }) {
           </g>
 
           {/* Verdict badge */}
-          <g transform="translate(60, 140)">
-            <rect width="240" height="44" rx="22" fill={tone.bg} opacity="0.15" />
+          <g transform="translate(60, 120)">
+            <rect width="260" height="44" rx="22" fill={tone.bg} opacity="0.12" />
             <circle cx="22" cy="22" r="8" fill={tone.bg} />
             <text
               x="42"
@@ -137,9 +241,9 @@ export function ShareCard({ result }: { result: AnalysisResult }) {
           </g>
 
           {/* Score */}
-          <g transform="translate(60, 215)">
+          <g transform="translate(60, 195)">
             <text fontFamily="Sora, sans-serif" fontWeight="800" fontSize="120" fill="#0f172a">
-              {result.score}
+              {Math.round(result.score)}
               <tspan fontSize="56" fill="#64748b">
                 %
               </tspan>
@@ -150,15 +254,19 @@ export function ShareCard({ result }: { result: AnalysisResult }) {
           </g>
 
           {/* Message preview */}
-          <g transform="translate(560, 200)">
-            <rect width="580" height="200" rx="16" fill="#ffffff" stroke="#e2e8f0" />
-            <foreignObject x="20" y="16" width="540" height="168">
+          <g transform="translate(560, 160)">
+            <rect width="580" height="210" rx="16" fill="#ffffff" stroke="#e2e8f0" />
+            <foreignObject x="20" y="16" width="540" height="178">
               <div
                 style={{
                   fontFamily: "Manrope, sans-serif",
                   fontSize: "18px",
                   lineHeight: 1.5,
                   color: "#334155",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 5,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
                 }}
               >
                 "{preview}"
@@ -166,29 +274,73 @@ export function ShareCard({ result }: { result: AnalysisResult }) {
             </foreignObject>
           </g>
 
+          {/* Top red flag */}
+          {topFlag && (
+            <g transform="translate(60, 390)">
+              <rect width="500" height="56" rx="12" fill="#ffffff" stroke="#e2e8f0" />
+              <circle cx="24" cy="28" r="8" fill={SEV_DOT[topFlag.severity]} />
+              <text
+                x="44"
+                y="25"
+                fontFamily="Manrope, sans-serif"
+                fontWeight="700"
+                fontSize="17"
+                fill="#0f172a"
+              >
+                {topFlag.label}
+              </text>
+              <text
+                x="44"
+                y="45"
+                fontFamily="Manrope, sans-serif"
+                fontSize="13"
+                fill="#64748b"
+              >
+                {topFlag.description}
+              </text>
+            </g>
+          )}
+
           {/* Red flag chips */}
-          <g transform="translate(60, 470)">
-            {result.redFlags.slice(0, 3).map((f, i) => (
-              <g key={f.id} transform={`translate(${i * 360}, 0)`}>
-                <rect width="340" height="50" rx="10" fill="#ffffff" stroke="#e2e8f0" />
-                <circle cx="22" cy="25" r="6" fill={tone.bg} />
-                <text
-                  x="40"
-                  y="32"
-                  fontFamily="Manrope, sans-serif"
-                  fontWeight="600"
-                  fontSize="16"
-                  fill="#0f172a"
-                >
-                  {f.label}
-                </text>
-              </g>
-            ))}
-          </g>
+          {visibleFlags.length > 1 ? (
+            <g transform="translate(60, 462)">
+              {visibleFlags.map((f, i) => (
+                <g key={f.id} transform={`translate(${i * 280}, 0)`}>
+                  <rect width="260" height="48" rx="10" fill="#ffffff" stroke="#e2e8f0" />
+                  <circle cx="18" cy="24" r="6" fill={SEV_DOT[f.severity]} />
+                  <text
+                    x="34"
+                    y="30"
+                    fontFamily="Manrope, sans-serif"
+                    fontWeight="600"
+                    fontSize="15"
+                    fill="#0f172a"
+                  >
+                    {f.label}
+                  </text>
+                </g>
+              ))}
+            </g>
+          ) : visibleFlags.length === 1 ? (
+            <g transform="translate(60, 462)">
+              <rect width="260" height="48" rx="10" fill="#ffffff" stroke="#e2e8f0" />
+              <circle cx="18" cy="24" r="6" fill={SEV_DOT[visibleFlags[0].severity]} />
+              <text
+                x="34"
+                y="30"
+                fontFamily="Manrope, sans-serif"
+                fontWeight="600"
+                fontSize="15"
+                fill="#0f172a"
+              >
+                {visibleFlags[0].label}
+              </text>
+            </g>
+          ) : null}
 
           {/* Footer */}
-          <text x="60" y="580" fontFamily="Manrope, sans-serif" fontSize="16" fill="#64748b">
-            Verify before you trust · scamshield.ai
+          <text x="60" y="580" fontFamily="Manrope, sans-serif" fontSize="15" fill="#64748b">
+            Verify before you trust · {sourceUrl.replace(/^https?:\/\//, "")}
           </text>
         </svg>
       </div>

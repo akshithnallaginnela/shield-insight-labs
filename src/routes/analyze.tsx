@@ -41,6 +41,7 @@ export const Route = createFileRoute("/analyze")({
 });
 
 function AnalyzePage() {
+  const navigate = useNavigate();
   const search = Route.useSearch();
   const pending = useAnalysisStore((s) => s.pendingMessage);
   const result = useAnalysisStore((s) => s.result);

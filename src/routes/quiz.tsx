@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { Sparkles, Check, X, Award, RotateCcw } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { Sparkles, Check, X, Award, RotateCcw, Download, ShieldCheck } from "lucide-react";
+
 
 export const Route = createFileRoute("/quiz")({
   head: () => ({
@@ -93,7 +94,12 @@ const QUESTIONS: Q[] = [
 function QuizPage() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<boolean[]>([]); // correct?
+  const [picks, setPicks] = useState<boolean[]>([]); // what user picked
   const [selected, setSelected] = useState<null | boolean>(null);
+  const [recipientName, setRecipientName] = useState("");
+  const [downloading, setDownloading] = useState(false);
+  const certRef = useRef<SVGSVGElement>(null);
+
 
   const done = step >= QUESTIONS.length;
   const score = answers.filter(Boolean).length;
@@ -115,6 +121,7 @@ function QuizPage() {
   const next = () => {
     if (!current || selected === null) return;
     setAnswers((a) => [...a, selected === current.isScam]);
+    setPicks((p) => [...p, selected]);
     setSelected(null);
     setStep((s) => s + 1);
   };
@@ -122,8 +129,57 @@ function QuizPage() {
   const reset = () => {
     setStep(0);
     setAnswers([]);
+    setPicks([]);
     setSelected(null);
   };
+
+  const issuedOn = useMemo(
+    () =>
+      new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    [done],
+  );
+  const certId = useMemo(
+    () => `SSAI-${Math.random().toString(36).slice(2, 8).toUpperCase()}-${score}${QUESTIONS.length}`,
+    [done],
+  );
+  const displayName = recipientName.trim() || "Cybersecurity Trainee";
+
+  const downloadCertificate = async () => {
+    if (!certRef.current) return;
+    setDownloading(true);
+    try {
+      const svg = certRef.current;
+      const xml = new XMLSerializer().serializeToString(svg);
+      const svg64 = btoa(unescape(encodeURIComponent(xml)));
+      const dataUrl = `data:image/svg+xml;base64,${svg64}`;
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error("img load"));
+        img.src = dataUrl;
+      });
+      const canvas = document.createElement("canvas");
+      canvas.width = 1600;
+      canvas.height = 1100;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("canvas ctx");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const link = document.createElement("a");
+      link.download = `scamshield-certificate-${certId}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } finally {
+      setDownloading(false);
+    }
+  };
+
 
   return (
     <div className="mx-auto max-w-3xl px-4 pt-10 md:px-6 md:pt-14">
@@ -222,28 +278,198 @@ function QuizPage() {
 
       {/* Result */}
       {done && (
-        <div className="glass-card animated-border mt-8 rounded-2xl p-8 text-center animate-fade-up">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gradient-brand text-white shadow-[0_10px_30px_-10px_rgba(59,130,246,0.6)]">
-            <Award className="h-7 w-7" />
+        <>
+          <div className="glass-card animated-border mt-8 rounded-2xl p-8 text-center animate-fade-up">
+            <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gradient-brand text-white shadow-[0_10px_30px_-10px_rgba(59,130,246,0.6)]">
+              <Award className="h-7 w-7" />
+            </div>
+            <p className="mt-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              Your badge
+            </p>
+            <h2 className={`mt-1 font-display text-3xl font-bold ${badge.tone}`}>{badge.label}</h2>
+            <p className="mt-3 font-mono text-5xl font-semibold tabular-nums text-foreground">
+              {score}
+              <span className="text-xl text-muted-foreground">/{QUESTIONS.length}</span>
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              You spotted {score} of {QUESTIONS.length} threats correctly.
+            </p>
+            <button
+              onClick={reset}
+              className="mt-5 inline-flex items-center gap-2 rounded-lg border border-border bg-white/70 px-4 py-2 text-sm font-medium hover:bg-white"
+            >
+              <RotateCcw className="h-4 w-4" /> Try again
+            </button>
           </div>
-          <p className="mt-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Your badge
-          </p>
-          <h2 className={`mt-1 font-display text-3xl font-bold ${badge.tone}`}>{badge.label}</h2>
-          <p className="mt-3 font-mono text-5xl font-semibold tabular-nums text-foreground">
-            {score}
-            <span className="text-xl text-muted-foreground">/{QUESTIONS.length}</span>
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            You spotted {score} of {QUESTIONS.length} threats correctly.
-          </p>
-          <button
-            onClick={reset}
-            className="mt-5 inline-flex items-center gap-2 rounded-lg border border-border bg-white/70 px-4 py-2 text-sm font-medium hover:bg-white"
-          >
-            <RotateCcw className="h-4 w-4" /> Try again
-          </button>
-        </div>
+
+          {/* Answers summary */}
+          <div className="glass-card mt-6 rounded-2xl p-6 animate-fade-up md:p-8">
+            <h3 className="font-display text-xl font-semibold text-foreground">Your answers</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Review every question, your pick, and the correct call.
+            </p>
+            <ol className="mt-5 space-y-3">
+              {QUESTIONS.map((q, i) => {
+                const pick = picks[i];
+                const correct = answers[i];
+                return (
+                  <li
+                    key={i}
+                    className={`rounded-xl border p-4 ${
+                      correct ? "border-safe/30 bg-safe/5" : "border-danger/30 bg-danger/5"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                        <span className="font-mono">Q{i + 1}</span>
+                        <span>·</span>
+                        <span>{q.source}</span>
+                      </div>
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                          correct ? "bg-safe/15 text-safe" : "bg-danger/15 text-danger"
+                        }`}
+                      >
+                        {correct ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
+                        {correct ? "Correct" : "Missed"}
+                      </span>
+                    </div>
+                    <p className="mt-2 line-clamp-2 text-sm text-foreground/90">"{q.message}"</p>
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                      <div className="rounded-lg border border-border bg-white/60 px-3 py-2">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">You picked</p>
+                        <p className="mt-0.5 font-semibold text-foreground">
+                          {pick ? "It's a Scam" : "Looks Safe"}
+                        </p>
+                      </div>
+                      <div className="rounded-lg border border-border bg-white/60 px-3 py-2">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Correct</p>
+                        <p className="mt-0.5 font-semibold text-foreground">
+                          {q.isScam ? "It's a Scam" : "Looks Safe"}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-xs text-muted-foreground">{q.reason}</p>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+
+          {/* Certificate */}
+          <div className="glass-card mt-6 rounded-2xl p-6 animate-fade-up md:p-8">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h3 className="font-display text-xl font-semibold text-foreground">
+                  Your certificate
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Add your name and download a shareable image.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <input
+                  type="text"
+                  value={recipientName}
+                  onChange={(e) => setRecipientName(e.target.value.slice(0, 40))}
+                  placeholder="Your name"
+                  className="w-full rounded-lg border border-border bg-white/80 px-3 py-2 text-sm outline-none focus:border-primary sm:w-56"
+                />
+                <button
+                  onClick={downloadCertificate}
+                  disabled={downloading}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-brand px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                >
+                  <Download className="h-4 w-4" />
+                  {downloading ? "Preparing…" : "Download PNG"}
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-5 overflow-hidden rounded-xl border border-border bg-white">
+              <svg
+                ref={certRef}
+                viewBox="0 0 1600 1100"
+                xmlns="http://www.w3.org/2000/svg"
+                className="block h-auto w-full"
+              >
+                <defs>
+                  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#f8fafc" />
+                    <stop offset="100%" stopColor="#eef2ff" />
+                  </linearGradient>
+                  <linearGradient id="brand" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#3b82f6" />
+                    <stop offset="100%" stopColor="#8b5cf6" />
+                  </linearGradient>
+                </defs>
+                <rect width="1600" height="1100" fill="url(#bg)" />
+                <rect x="40" y="40" width="1520" height="1020" rx="28" fill="white" stroke="#e2e8f0" strokeWidth="2" />
+                <rect x="40" y="40" width="1520" height="10" fill="url(#brand)" />
+                <rect x="40" y="1050" width="1520" height="10" fill="url(#brand)" />
+
+                <g transform="translate(800,170)">
+                  <circle r="48" fill="url(#brand)" />
+                  <path d="M -18 -4 L -4 12 L 22 -14" stroke="white" strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </g>
+
+                <text x="800" y="270" textAnchor="middle" fontFamily="Sora, system-ui, sans-serif" fontSize="22" fill="#64748b" letterSpacing="6">
+                  SCAMSHIELD AI
+                </text>
+                <text x="800" y="340" textAnchor="middle" fontFamily="Sora, system-ui, sans-serif" fontSize="56" fontWeight="700" fill="#0f172a">
+                  Certificate of Achievement
+                </text>
+                <text x="800" y="395" textAnchor="middle" fontFamily="Manrope, system-ui, sans-serif" fontSize="20" fill="#64748b">
+                  Scam Awareness Quiz · Issued {issuedOn}
+                </text>
+
+                <text x="800" y="475" textAnchor="middle" fontFamily="Manrope, system-ui, sans-serif" fontSize="22" fill="#475569">
+                  This certifies that
+                </text>
+                <text x="800" y="555" textAnchor="middle" fontFamily="Sora, system-ui, sans-serif" fontSize="68" fontWeight="700" fill="#1e293b">
+                  {displayName}
+                </text>
+                <line x1="500" y1="585" x2="1100" y2="585" stroke="#cbd5e1" strokeWidth="2" />
+
+                <text x="800" y="650" textAnchor="middle" fontFamily="Manrope, system-ui, sans-serif" fontSize="22" fill="#475569">
+                  has successfully completed the ScamShield AI awareness assessment,
+                </text>
+                <text x="800" y="685" textAnchor="middle" fontFamily="Manrope, system-ui, sans-serif" fontSize="22" fill="#475569">
+                  identifying phishing, recruiter fraud, and social engineering threats.
+                </text>
+
+                <g transform="translate(800,820)">
+                  <rect x="-280" y="-70" width="260" height="140" rx="16" fill="#f1f5f9" />
+                  <text x="-150" y="-30" textAnchor="middle" fontFamily="Manrope" fontSize="16" fill="#64748b" letterSpacing="3">SCORE</text>
+                  <text x="-150" y="30" textAnchor="middle" fontFamily="Sora" fontSize="56" fontWeight="700" fill="#0f172a">
+                    {score}/{QUESTIONS.length}
+                  </text>
+
+                  <rect x="20" y="-70" width="260" height="140" rx="16" fill="url(#brand)" />
+                  <text x="150" y="-30" textAnchor="middle" fontFamily="Manrope" fontSize="16" fill="#e0e7ff" letterSpacing="3">BADGE</text>
+                  <text x="150" y="20" textAnchor="middle" fontFamily="Sora" fontSize="26" fontWeight="700" fill="white">
+                    {badge.label.replace(" — keep learning!", "")}
+                  </text>
+                  <text x="150" y="50" textAnchor="middle" fontFamily="Manrope" fontSize="14" fill="#e0e7ff">
+                    {Math.round((score / QUESTIONS.length) * 100)}% accuracy
+                  </text>
+                </g>
+
+                <text x="80" y="1010" fontFamily="Manrope" fontSize="14" fill="#64748b">
+                  Certificate ID · {certId}
+                </text>
+                <text x="1520" y="1010" textAnchor="end" fontFamily="Manrope" fontSize="14" fill="#64748b">
+                  scamshield.ai · Verify integrity, not identity
+                </text>
+              </svg>
+            </div>
+
+            <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+              <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+              The certificate is generated locally on your device — your name is never sent anywhere.
+            </p>
+          </div>
+        </>
       )}
     </div>
   );
